@@ -7,11 +7,13 @@ load_dotenv(BASE_DIR / '.env',override=True)
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-greenharvest-dev-key')
 DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
+
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
     'greenharvest-1zug.onrender.com',
 ]
+
 
 
 INSTALLED_APPS = [
