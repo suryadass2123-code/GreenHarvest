@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv(BASE_DIR / '.env',override=True)
+load_dotenv(BASE_DIR / '.env')
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-greenharvest-dev-key')
 DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
