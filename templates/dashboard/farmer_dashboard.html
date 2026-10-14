@@ -1,0 +1,157 @@
+{% load static %}
+{% extends 'base.html' %}
+{% block title %}My Farm | GreenHarvest{% endblock %}
+{% block content %}
+<section class="farmer-hero">
+    <div class="farmer-hero-overlay"></div>
+    <div class="container position-relative py-4 py-lg-5">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-6">
+                <span class="eyebrow">Empowering Farmers <i class="bi bi-dot"></i> Growing Together</span>
+                <h1>Sell Your Fresh Produce <span>Directly to Customers</span></h1>
+                <p>GreenHarvest helps you showcase farm-fresh products, reach more customers and get better prices—without unnecessary middlemen.</p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="{% url 'product_create' %}" class="btn btn-success btn-lg rounded-pill px-4"><i class="bi bi-plus-circle me-2"></i>Add New Product</a>
+                    <a href="{% url 'farmer_products' %}" class="btn btn-light btn-lg rounded-pill px-4"><i class="bi bi-box-seam me-2"></i>View My Products</a>
+                </div>
+            </div>
+            <div class="col-lg-6 hero-farmer-visual">
+                <img src="{% static 'images/farmer-hero.png' %}" alt="Farmer with fresh vegetables">
+                <div class="hero-quote">Healthy Soil<br>Healthy Food<br>Happy Future <span>⌁</span></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="benefit-strip">
+    <div class="container">
+        <div class="row g-0">
+            <div class="col-6 col-lg"><div class="benefit-item"><span><i class="bi bi-leaf"></i></span><strong>Direct Market Access</strong><small>Sell without middlemen</small></div></div>
+            <div class="col-6 col-lg"><div class="benefit-item"><span><i class="bi bi-currency-rupee"></i></span><strong>Better Prices</strong><small>Get fair value for your crop</small></div></div>
+            <div class="col-6 col-lg"><div class="benefit-item"><span><i class="bi bi-truck"></i></span><strong>Wide Reach</strong><small>Connect with customers</small></div></div>
+            <div class="col-6 col-lg"><div class="benefit-item"><span><i class="bi bi-shield-check"></i></span><strong>Secure &amp; Trusted</strong><small>Safe transactions &amp; support</small></div></div>
+            <div class="col-12 col-lg"><div class="benefit-item"><span><i class="bi bi-flower1"></i></span><strong>Sustainable Farming</strong><small>A greener tomorrow</small></div></div>
+        </div>
+    </div>
+</section>
+
+<section class="farmer-workspace py-5">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-xl-4">
+                <div class="panel-card h-100">
+                    <div class="section-heading d-flex justify-content-between align-items-center">
+                        <div><h4><i class="bi bi-flower1 me-2"></i>Your Products</h4><span>Manage your latest listings</span></div>
+                        <a href="{% url 'farmer_products' %}">View All <i class="bi bi-arrow-right"></i></a>
+                    </div>
+                    <div class="row g-3">
+                        {% for p in products %}
+                        <div class="col-6">
+                            <div class="mini-product-card">
+                                {% if p.image %}<img src="{{ p.image.url }}" alt="{{ p.name }}">{% else %}<div class="mini-product-placeholder"><i class="bi bi-image"></i></div>{% endif %}
+                                <div class="p-3">
+                                    <div class="d-flex justify-content-between gap-2"><strong>{{ p.name }}</strong><span class="status-pill {% if p.stock <= 3 %}warning{% else %}success{% endif %}">{% if p.is_available %}Active{% else %}Off{% endif %}</span></div>
+                                    <div class="product-price">₹{{ p.price }}/{{ p.unit }}</div>
+                                    <small>Stock: {{ p.stock }} {{ p.unit }}</small>
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="col-12"><div class="empty-state"><i class="bi bi-box-seam"></i><p>No products yet.</p><a href="{% url 'product_create' %}" class="btn btn-success rounded-pill">Add your first product</a></div></div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-5" id="analytics">
+                <div class="farm-overview-card h-100">
+                    <div class="overview-header">
+                        <div><h4><i class="bi bi-bar-chart-fill me-2"></i>Farm Overview</h4><span>Track sales and performance</span></div>
+                        <span class="month-chip"><i class="bi bi-calendar3 me-1"></i>This Week</span>
+                    </div>
+                    <div class="stat-grid">
+                        <div class="farm-stat"><span><i class="bi bi-box-seam"></i></span><small>Total Products</small><strong>{{ product_count }}</strong></div>
+                        <div class="farm-stat"><span><i class="bi bi-cart-check"></i></span><small>Total Orders</small><strong>{{ order_count }}</strong></div>
+                        <div class="farm-stat"><span><i class="bi bi-currency-rupee"></i></span><small>Total Revenue</small><strong>₹{{ revenue|floatformat:0 }}</strong></div>
+                        <div class="farm-stat"><span><i class="bi bi-clock-history"></i></span><small>Pending Orders</small><strong>{{ pending_count }}</strong></div>
+                    </div>
+                    <div class="chart-header"><h5>Sales Overview</h5><span>Last 7 days</span></div>
+                    <div class="farmer-chart-wrap"><canvas id="farmerSalesChart"></canvas></div>
+                </div>
+            </div>
+
+            <div class="col-xl-3">
+                <div class="quick-links-card h-100">
+                    <h4><i class="bi bi-grid-1x2-fill me-2"></i>Quick Links</h4>
+                    <a href="{% url 'product_create' %}"><span><i class="bi bi-plus-circle"></i> Add New Product</span><i class="bi bi-chevron-right"></i></a>
+                    <a href="{% url 'farmer_products' %}"><span><i class="bi bi-box-seam"></i> Manage Products</span><i class="bi bi-chevron-right"></i></a>
+                    <a href="{% url 'farmer_orders' %}"><span><i class="bi bi-receipt"></i> View Orders</span><i class="bi bi-chevron-right"></i></a>
+                    <a href="{% url 'notifications' %}"><span><i class="bi bi-bell"></i> Notifications</span><i class="bi bi-chevron-right"></i></a>
+                    <a href="{% url 'farmer_dashboard' %}#analytics"><span><i class="bi bi-bar-chart"></i> Analytics</span><i class="bi bi-chevron-right"></i></a>
+                    <a href="{% url 'home' %}"><span><i class="bi bi-headset"></i> Help &amp; Support</span><i class="bi bi-chevron-right"></i></a>
+                    <div class="growth-banner mt-3"><span class="small">Together We Grow</span><strong>A Healthier Planet</strong><small>Sustainable farming for a better tomorrow</small></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mt-1">
+            <div class="col-lg-8">
+                <div class="panel-card">
+                    <div class="section-heading"><div><h4>Recent Customer Orders</h4><span>Your latest sales activity</span></div><a href="{% url 'farmer_orders' %}">View All <i class="bi bi-arrow-right"></i></a></div>
+                    <div class="table-responsive">
+                        <table class="table farm-table align-middle">
+                            <thead><tr><th>Order</th><th>Customer</th><th>Amount</th><th>Status</th></tr></thead>
+                            <tbody>
+                            {% for o in recent_orders %}
+                            <tr><td><strong>{{ o.order_number }}</strong><small>{{ o.created_at|date:"d M Y" }}</small></td><td>{{ o.customer.get_full_name|default:o.customer.username }}</td><td class="fw-semibold">₹{{ o.total_amount|floatformat:2 }}</td><td><span class="status-pill {% if o.status == 'DELIVERED' %}success{% elif o.status == 'CANCELLED' %}danger{% elif o.status == 'PENDING' %}warning{% else %}blue{% endif %}">{{ o.status|title }}</span></td></tr>
+                            {% empty %}<tr><td colspan="4" class="text-center text-muted py-4">No customer orders yet.</td></tr>{% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="panel-card h-100">
+                    <div class="section-heading"><div><h4>Top Products</h4><span>Best sellers on your farm</span></div></div>
+                    {% for p in top_products %}
+                    <div class="top-product-row"><div class="top-product-icon"><i class="bi bi-box"></i></div><div class="flex-grow-1"><strong>{{ p.product_name }}</strong><small>{{ p.quantity }} sold</small></div><strong class="text-success">₹{{ p.revenue|floatformat:0 }}</strong></div>
+                    {% empty %}<div class="empty-state compact"><i class="bi bi-bar-chart"></i><p>Sales data will appear here after deliveries.</p></div>{% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const ctx = document.getElementById('farmerSalesChart');
+if (ctx) {
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {{ sales_labels|safe }},
+            datasets: [{
+                label: 'Sales (₹)',
+                data: {{ sales_values|safe }},
+                fill: true,
+                tension: 0.35,
+                pointRadius: 4,
+                pointHoverRadius: 6,
+                borderWidth: 3
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { beginAtZero: true, grid: { color: 'rgba(25,135,84,.08)' } },
+                x: { grid: { display: false } }
+            }
+        }
+    });
+}
+</script>
+{% endblock %}

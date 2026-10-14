@@ -1,0 +1,3 @@
+{% extends 'base.html' %}{% block title %}Rewards | GreenHarvest{% endblock %}{% block content %}
+<div class="container py-5"><div class="reward-card mx-auto mb-4" style="max-width:500px"><i class="bi bi-stars display-4 text-warning"></i><div class="reward-points">{{ points }}</div><p class="text-muted">Available Reward Points</p><p class="mb-0">Earn 1 point for every ₹100 spent.</p></div><h3>Reward History</h3>{% for t in transactions %}<div class="order-card mb-2 d-flex justify-content-between"><span>{{ t.description }}<br><small class="text-muted">{{ t.created_at|date:'d M Y' }}</small></span><strong class="text-success">+{{ t.points }}</strong></div>{% empty %}<div class="alert alert-light border">No reward transactions yet.</div>{% endfor %}</div>
+{% endblock %}

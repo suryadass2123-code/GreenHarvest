@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}GreenHarvest | Fresh Produce • Better Tomorrow{% endblock %}
+{% block content %}
+<section class="home-hero">
+    <div class="home-hero-glow"></div>
+    <div class="container py-5 position-relative">
+        <div class="row align-items-center g-5 py-lg-4">
+            <div class="col-lg-6">
+                <span class="eyebrow">Fresh from the farm <i class="bi bi-dot"></i> Direct to home</span>
+                <h1>Better food starts with a <span>better connection.</span></h1>
+                <p>GreenHarvest brings farmers and customers together to make fresh agricultural products easier to sell, buy and enjoy.</p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="{% url 'product_list' %}" class="btn btn-success btn-lg rounded-pill px-4"><i class="bi bi-basket2 me-2"></i>Shop Fresh Products</a>
+                    <a href="{% url 'register' %}" class="btn btn-outline-dark btn-lg rounded-pill px-4">Join GreenHarvest</a>
+                </div>
+                <div class="hero-proof mt-4"><span><i class="bi bi-check2-circle"></i> Trusted farmers</span><span><i class="bi bi-check2-circle"></i> Fair pricing</span><span><i class="bi bi-check2-circle"></i> Farm-fresh delivery</span></div>
+            </div>
+            <div class="col-lg-6">
+                <div class="home-hero-image-card">
+                    <div class="image-badge top"><i class="bi bi-patch-check-fill"></i> Farm Fresh</div>
+                    <img src="{% static 'images/farmer-hero.png' %}" alt="Farmer with fresh produce">
+                    <div class="image-badge bottom"><strong>Better market access</strong><small>Grow your farm business with GreenHarvest</small></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="impact-strip"><div class="container"><div class="row g-3 text-center"><div class="col-6 col-lg-3"><strong>100%</strong><span>Direct farmer connection</span></div><div class="col-6 col-lg-3"><strong>Fresh</strong><span>Local agricultural products</span></div><div class="col-6 col-lg-3"><strong>Secure</strong><span>Simple digital checkout</span></div><div class="col-6 col-lg-3"><strong>Fair</strong><span>Better value for growers</span></div></div></div></section>
+
+<section class="py-5"><div class="container"><div class="section-heading-centered"><span>Explore GreenHarvest</span><h2>Fresh categories for every kitchen</h2><p>Browse produce by category and discover local farm listings.</p></div><div class="row g-3">{% for c in categories %}<div class="col-6 col-md-4 col-lg-3"><a class="category-card" href="{% url 'product_list' %}?category={{ c.id }}"><span><i class="bi bi-flower1"></i></span><strong>{{ c.name }}</strong><small>View products</small><i class="bi bi-arrow-up-right"></i></a></div>{% empty %}<div class="col-12"><div class="empty-state"><i class="bi bi-tags"></i><p>Add categories from Django Admin.</p></div></div>{% endfor %}</div></div></section>
+
+<section class="py-5 bg-soft"><div class="container"><div class="section-heading d-flex justify-content-between align-items-end mb-4"><div><span>Fresh listings</span><h2>Featured farm products</h2><p>Recently added products from GreenHarvest farmers.</p></div><a href="{% url 'product_list' %}" class="btn btn-outline-success rounded-pill">View All <i class="bi bi-arrow-right"></i></a></div><div class="row g-4">{% for p in featured_products %}<div class="col-md-6 col-lg-3"><div class="showcase-card h-100">{% if p.image %}<img src="{{ p.image.url }}" alt="{{ p.name }}">{% else %}<div class="showcase-placeholder"><i class="bi bi-image"></i></div>{% endif %}<div class="p-3"><div class="d-flex justify-content-between align-items-center"><span class="status-pill success">Available</span><span class="text-warning">★ {{ p.avg_rating|floatformat:1 }}</span></div><h5 class="mt-3 mb-1">{{ p.name }}</h5><small class="text-muted"><i class="bi bi-geo-alt"></i> {{ p.location|default:'Local farm' }}</small><div class="d-flex justify-content-between align-items-center mt-3"><strong class="product-price">₹{{ p.price }}/{{ p.unit }}</strong><a class="btn btn-sm btn-success rounded-pill px-3" href="{% url 'product_detail' p.id %}">View</a></div></div></div></div>{% empty %}<div class="col-12"><div class="empty-state"><i class="bi bi-basket"></i><p>No products yet. Add products as a farmer to populate this section.</p></div></div>{% endfor %}</div></div></section>
+
+<section class="py-5"><div class="container"><div class="row g-4 align-items-stretch"><div class="col-lg-5"><div class="story-card"><span class="eyebrow">Why GreenHarvest?</span><h2>Technology that works for the people who grow our food.</h2><p>Farmers get a simple storefront, inventory controls and order visibility. Customers get transparent prices, product details and a direct connection to the source.</p><a href="{% url 'register' %}" class="btn btn-success rounded-pill px-4">Get Started <i class="bi bi-arrow-right ms-1"></i></a></div></div><div class="col-lg-7"><div class="row g-3 h-100"><div class="col-sm-6"><div class="feature-box"><i class="bi bi-shop"></i><h5>Direct Marketplace</h5><p>Reduce unnecessary intermediaries and improve farmer market access.</p></div></div><div class="col-sm-6"><div class="feature-box"><i class="bi bi-bar-chart-line"></i><h5>Smart Farm Dashboard</h5><p>Monitor products, orders, revenue and sales performance in one place.</p></div></div><div class="col-sm-6"><div class="feature-box"><i class="bi bi-shield-check"></i><h5>Secure Transactions</h5><p>Cash on Delivery and gateway-ready online payment workflows.</p></div></div><div class="col-sm-6"><div class="feature-box"><i class="bi bi-star"></i><h5>Customer Trust</h5><p>Reviews, ratings, order tracking, rewards and notifications.</p></div></div></div></div></div></div></section>
+{% endblock %}

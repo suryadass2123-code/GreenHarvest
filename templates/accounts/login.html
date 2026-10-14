@@ -1,0 +1,3 @@
+{% extends 'base.html' %}{% block title %}Login | GreenHarvest{% endblock %}{% block content %}
+<div class="container py-5"><div class="row justify-content-center"><div class="col-lg-5"><div class="form-card"><h2 class="text-center mb-4">Welcome Back</h2><form method="post">{% csrf_token %}<div class="mb-3"><label class="form-label">Username</label><input name="username" class="form-control" required></div><div class="mb-3"><label class="form-label">Password</label><input name="password" type="password" class="form-control" required></div><button class="btn btn-success w-100">Login</button></form><p class="text-center mt-3 mb-0">New user? <a href="{% url 'register' %}">Register</a></p></div></div></div></div>
+{% endblock %}
