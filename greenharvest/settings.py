@@ -13,6 +13,7 @@ ALLOWED_HOSTS = [
     'greenharvest-1zug.onrender.com',
 ]
 
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
