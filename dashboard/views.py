@@ -59,14 +59,23 @@ def farmer_dashboard(request):
         sales_labels.append(d.strftime('%a'))
         sales_values.append(daily_lookup.get(d, 0))
 
+    
     top_products = (
-        OrderItem.objects.filter(product__farmer=request.user, order__status='DELIVERED')
+        OrderItem.objects
+        .filter(
+            product__farmer=request.user,
+            order__status='DELIVERED'
+        )
         .values('product_name')
-        .annotate(quantity=Sum('quantity'), revenue=Sum(F('price') * F('quantity')))
-        .order_by('-quantity')[:4]
+        .annotate(
+            total_quantity=Sum('quantity'),
+            revenue=Sum(F('price') * F('quantity'))
+        )
+        .order_by('-total_quantity')[:5]
     )
 
     recent_orders = farmer_orders.select_related('customer').order_by('-created_at')[:6]
+
 
     context = {
         'product_count': products.count(),
