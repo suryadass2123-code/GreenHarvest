@@ -67,17 +67,17 @@
                         <img src="{% static 'images/products/brinjal.png' %}"
                              alt="{{ p.name }}" class="product-card-image">
                             
-{% elif "drumstick" in p.name|lower %}
-    <img src="{% static 'images/products/drumstick.jpg' %}"
-         alt="{{ p.name }}" class="product-card-image">
+                    {% elif "drumstick" in p.name|lower %}
+                         <img src="{% static 'images/products/drumstick.jpg' %}"
+                            alt="{{ p.name }}" class="product-card-image">
 
-{% elif "ladies finger" in p.name|lower or "ladies-finger" in p.name|lower or "okra" in p.name|lower %}
-    <img src="{% static 'images/products/ladies-finger.jpg' %}"
-         alt="{{ p.name }}" class="product-card-image">
+                    {% elif "ladies finger" in p.name|lower or "ladies-finger" in p.name|lower or "okra" in p.name|lower %}
+                         <img src="{% static 'images/products/ladies-finger.jpg' %}"
+                            alt="{{ p.name }}" class="product-card-image">
 
-{% elif "carrot" in p.name|lower %}
-    <img src="{% static 'images/products/carrot.jpg' %}"
-         alt="{{ p.name }}" class="product-card-image">
+                    {% elif "carrot" in p.name|lower %}
+                        <img src="{% static 'images/products/carrot.jpg' %}"
+                            alt="{{ p.name }}" class="product-card-image">
 
 {% elif "cabbage" in p.name|lower %}
     <img src="{% static 'images/products/cabbage.jpg' %}"
@@ -103,7 +103,7 @@
     <img src="{% static 'images/products/cucumber.jpg' %}" alt="{{ p.name }}" class="product-card-image">
 
 {% elif "pumpkin" in p.name|lower %}
-    <img src="{% static 'images/products/Pumpkin.jpg' %}" alt="{{ p.name }}" class="product-card-image">
+    <img src="{% static 'images/products/pumpkin.jpg' %}" alt="{{ p.name }}" class="product-card-image">
 
 {% elif "spinach" in p.name|lower %}
     <img src="{% static 'images/products/Spinach.jpg' %}" alt="{{ p.name }}" class="product-card-image">
