@@ -1,5 +1,130 @@
+
 {% extends 'base.html' %}
+{% load static %}
+
 {% block title %}Products | GreenHarvest{% endblock %}
+
 {% block content %}
-<section class="products-page py-5"><div class="container"><div class="products-head"><div><span class="eyebrow">Fresh from local farms</span><h1>Browse Fresh Products</h1><p>Discover fruits, vegetables, leafy greens and more directly from farmers.</p></div></div><form class="filter-bar row g-2 mb-4"><div class="col-lg-6"><div class="input-with-icon"><i class="bi bi-search"></i><input name="q" value="{{ q }}" class="form-control" placeholder="Search tomato, spinach, carrot..."></div></div><div class="col-lg-4"><select name="category" class="form-select"><option value="">All categories</option>{% for c in categories %}<option value="{{ c.id }}" {% if selected_category == c.id|stringformat:'s' %}selected{% endif %}>{{ c.name }}</option>{% endfor %}</select></div><div class="col-lg-2"><button class="btn btn-success w-100 rounded-pill">Search</button></div></form><div class="row g-4">{% for p in products %}<div class="col-sm-6 col-lg-4 col-xl-3"><div class="showcase-card h-100">{% if p.image %}<img src="{{ p.image.url }}" alt="{{ p.name }}">{% else %}<div class="showcase-placeholder"><i class="bi bi-image"></i></div>{% endif %}<div class="p-3"><div class="d-flex justify-content-between gap-2"><span class="status-pill success">{{ p.category.name }}</span><a href="{% url 'wishlist_toggle' p.id %}" class="wish-btn"><i class="bi bi-heart"></i></a></div><h5 class="mt-3 mb-1">{{ p.name }}</h5><div class="rating-row text-warning">{% for i in '12345' %}{% if forloop.counter <= p.avg_rating %}★{% else %}☆{% endif %}{% endfor %}<span> {{ p.avg_rating|floatformat:1 }}</span></div><p class="text-muted small mb-2">{{ p.description|truncatechars:80 }}</p><small class="text-muted"><i class="bi bi-geo-alt"></i> {{ p.location|default:'Local farm' }}</small><div class="d-flex justify-content-between align-items-center mt-3"><strong class="product-price">₹{{ p.price }}/{{ p.unit }}</strong><a href="{% url 'product_detail' p.id %}" class="btn btn-success btn-sm rounded-pill">View</a></div></div></div></div>{% empty %}<div class="col-12"><div class="empty-state"><i class="bi bi-search"></i><h4>No products found</h4><p>Try a different search or category.</p></div></div>{% endfor %}</div></div></section>
+<section class="products-page py-5">
+    <div class="container">
+
+        <div class="products-head">
+            <div>
+                <span class="eyebrow">Fresh from local farms</span>
+                <h1>Browse Fresh Products</h1>
+                <p>Discover fruits, vegetables, leafy greens and more directly from farmers.</p>
+            </div>
+        </div>
+
+        <form class="filter-bar row g-2 mb-4" method="get">
+            <div class="col-lg-6">
+                <div class="input-with-icon">
+                    <i class="bi bi-search"></i>
+                    <input name="q" value="{{ q|default:'' }}"
+                           class="form-control"
+                           placeholder="Search tomato, spinach, carrot...">
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <select name="category" class="form-select">
+                    <option value="">All categories</option>
+                    {% for c in categories %}
+                    <option value="{{ c.id }}"
+                        {% if selected_category == c.id|stringformat:'s' %}selected{% endif %}>
+                        {{ c.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-lg-2">
+                <button type="submit" class="btn btn-success w-100 rounded-pill">
+                    Search
+                </button>
+            </div>
+        </form>
+
+        <div class="row g-4">
+            {% for p in products %}
+            <div class="col-sm-6 col-lg-4 col-xl-3">
+                <div class="showcase-card h-100">
+
+                    {% if p.image %}
+                        <img src="{{ p.image.url }}"
+                             alt="{{ p.name }}"
+                             class="product-card-image">
+                    {% elif "tomato" in p.name|lower %}
+                        <img src="{% static 'images/products/tomato.jpg' %}"
+                             alt="{{ p.name }}" class="product-card-image">
+                    {% elif "onion" in p.name|lower %}
+                        <img src="{% static 'images/products/onion.jpg' %}"
+                             alt="{{ p.name }}" class="product-card-image">
+                    {% elif "potato" in p.name|lower %}
+                        <img src="{% static 'images/products/potato.jpg' %}"
+                             alt="{{ p.name }}" class="product-card-image">
+                    {% elif "brinjal" in p.name|lower or "eggplant" in p.name|lower %}
+                        <img src="{% static 'images/products/brinjal.png' %}"
+                             alt="{{ p.name }}" class="product-card-image">
+                    {% else %}
+                        <div class="showcase-placeholder">
+                            <i class="bi bi-image"></i>
+                        </div>
+                    {% endif %}
+
+                    <div class="p-3">
+                        <div class="d-flex justify-content-between gap-2">
+                            <span class="status-pill success">
+                                {{ p.category.name }}
+                            </span>
+                            <a href="{% url 'wishlist_toggle' p.id %}"
+                               class="wish-btn" aria-label="Add to wishlist">
+                                <i class="bi bi-heart"></i>
+                            </a>
+                        </div>
+
+                        <h5 class="mt-3 mb-1">{{ p.name }}</h5>
+
+                        <div class="rating-row text-warning">
+                            {% for i in '12345' %}
+                                {% if forloop.counter <= p.avg_rating %}★{% else %}☆{% endif %}
+                            {% endfor %}
+                            <span>{{ p.avg_rating|floatformat:1 }}</span>
+                        </div>
+
+                        <p class="text-muted small mb-2">
+                            {{ p.description|truncatechars:80 }}
+                        </p>
+
+                        <small class="text-muted">
+                            <i class="bi bi-geo-alt"></i>
+                            {{ p.location|default:'Local farm' }}
+                        </small>
+
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <strong class="product-price">
+                                ₹{{ p.price }}/{{ p.unit }}
+                            </strong>
+                            <a href="{% url 'product_detail' p.id %}"
+                               class="btn btn-success btn-sm rounded-pill">
+                                View
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="empty-state">
+                    <i class="bi bi-search"></i>
+                    <h4>No products found</h4>
+                    <p>Try a different search or category.</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</section>
 {% endblock %}
