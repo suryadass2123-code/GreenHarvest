@@ -47,11 +47,11 @@
                                             src="{{ p.image.url }}"
                                             alt="{{ p.name }}"
                                             onerror="this.onerror=null;this.src=this.dataset.fallback;"
-                                            data-fallback="{% static 'images/products/white onion.png' %}"
+                                            data-fallback="{% static 'images/products/white onion.jpg' %}"
                                         >
                                         {% else %}
                                         <img
-                                            src="{% static 'images/products/white onion.png' %}"
+                                            src="{% static 'images/products/white onion.jpg' %}"
                                             alt="{{ p.name }}"
                                         >
                                         {% endif %}
