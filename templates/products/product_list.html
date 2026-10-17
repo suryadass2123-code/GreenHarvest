@@ -66,6 +66,75 @@
                     {% elif "brinjal" in p.name|lower or "eggplant" in p.name|lower %}
                         <img src="{% static 'images/products/brinjal.png' %}"
                              alt="{{ p.name }}" class="product-card-image">
+                            
+{% elif "drumstick" in p.name|lower %}
+    <img src="{% static 'images/products/drumstick.jpg' %}"
+         alt="{{ p.name }}" class="product-card-image">
+
+{% elif "ladies finger" in p.name|lower or "ladies-finger" in p.name|lower or "okra" in p.name|lower %}
+    <img src="{% static 'images/products/ladies-finger.jpg' %}"
+         alt="{{ p.name }}" class="product-card-image">
+
+{% elif "carrot" in p.name|lower %}
+    <img src="{% static 'images/products/carrot.jpg' %}"
+         alt="{{ p.name }}" class="product-card-image">
+
+{% elif "cabbage" in p.name|lower %}
+    <img src="{% static 'images/products/cabbage.jpg' %}"
+         alt="{{ p.name }}" class="product-card-image">
+
+{% elif "cauliflower" in p.name|lower %}
+    <img src="{% static 'images/products/cauliflower.jpg' %}"
+         alt="{{ p.name }}" class="product-card-image">
+
+{% elif "green chilli" in p.name|lower or "green-chilli" in p.name|lower or "green chili" in p.name|lower %}
+    <img src="{% static 'images/products/green-chilli.jpg' %}"
+         alt="{{ p.name }}" class="product-card-image">
+
+{% elif "banana" in p.name|lower %}
+    <img src="{% static 'images/products/banana.jpg' %}"
+         alt="{{ p.name }}" class="product-card-image">
+
+{% elif "mango" in p.name|lower %}
+    <img src="{% static 'images/products/mango.jpg' %}"
+         alt="{{ p.name }}" class="product-card-image">
+
+{% elif "cucumber" in p.name|lower %}
+    <img src="{% static 'images/products/cucumber.jpg' %}" alt="{{ p.name }}" class="product-card-image">
+
+{% elif "pumpkin" in p.name|lower %}
+    <img src="{% static 'images/products/Pumpkin.jpg' %}" alt="{{ p.name }}" class="product-card-image">
+
+{% elif "spinach" in p.name|lower %}
+    <img src="{% static 'images/products/Spinach.jpg' %}" alt="{{ p.name }}" class="product-card-image">
+
+{% elif "coriander" in p.name|lower %}
+    <img src="{% static 'images/products/Coriander Leaves.jpg' %}" alt="{{ p.name }}" class="product-card-image">
+
+{% elif "mint" in p.name|lower %}
+    <img src="{% static 'images/products/Mint Leaves.jpg' %}" alt="{{ p.name }}" class="product-card-image">
+
+{% elif "papaya" in p.name|lower %}
+    <img src="{% static 'images/products/Papaya.jpg' %}" alt="{{ p.name }}" class="product-card-image">
+
+{% elif "guava" in p.name|lower %}
+    <img src="{% static 'images/products/Guava.jpg' %}" alt="{{ p.name }}" class="product-card-image">
+
+{% elif "watermelon" in p.name|lower %}
+    <img src="{% static 'images/products/Watermelon.jpg' %}" alt="{{ p.name }}" class="product-card-image">
+
+{% elif "pomegranate" in p.name|lower %}
+    <img src="{% static 'images/products/Pomegranate.jpg' %}" alt="{{ p.name }}" class="product-card-image">
+
+{% elif "sweet lime" in p.name|lower or "mosambi" in p.name|lower %}
+    <img src="{% static 'images/products/Sweet Lime.jpg' %}" alt="{{ p.name }}" class="product-card-image">
+
+{% elif "jackfruit" in p.name|lower %}
+    <img src="{% static 'images/products/Jackfruit.jpg' %}" alt="{{ p.name }}" class="product-card-image">
+{% elif "coconut" in p.name|lower %}
+    <img src="{% static 'images/products/Coconut.jpg' %}"
+         alt="{{ p.name }}"
+         class="product-card-image"> 
                     {% else %}
                         <div class="showcase-placeholder">
                             <i class="bi bi-image"></i>
