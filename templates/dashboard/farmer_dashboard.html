@@ -22,7 +22,8 @@
 .farmer-card strong{display:block;color:#173b29;font-size:1.5rem;margin-top:5px}
 .farmer-product{border:1px solid #edf1ed;border-radius:14px;overflow:hidden;height:100%}
 .farmer-product-image{width:100%;height:140px;object-fit:cover}
-.farmer-placeholder{height:140px;display:flex;align-items:center;justify-content:center;background:#f0f7f1;color:#758279}
+.farmer-placeholder{width:100%;min-height:140px;box-sizing:border-box;align-items:center;justify-content:center;background:#f0f7f1;color:#758279}
+.farmer-placeholder.is-visible{display:flex}
 .farmer-product-name{font-weight:700;color:#173b29;overflow-wrap:anywhere}
 .farmer-price{color:#13894e;font-weight:800}
 .farmer-panel .table{margin-bottom:0;vertical-align:middle}
@@ -99,10 +100,10 @@
               <div class="farmer-product">
                 {% if p.image %}
                   <img src="{{ p.image.url }}" alt="{{ p.name }}" class="farmer-product-image"
-                       onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-                  <div class="farmer-placeholder" style="display:none">Image unavailable</div>
+                       onerror="this.onerror=null;this.style.display='none';this.nextElementSibling.classList.add('is-visible');">
+                  <div class="farmer-placeholder">Image unavailable</div>
                 {% else %}
-                  <div class="farmer-placeholder">🌱 No image</div>
+                  <div class="farmer-placeholder is-visible">🌱 No image</div>
                 {% endif %}
                 <div class="p-3">
                   <div class="farmer-product-name">{{ p.name }}</div>
