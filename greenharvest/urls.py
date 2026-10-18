@@ -1,19 +1,33 @@
+
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from .views import home
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', home, name='home'),
-    path('accounts/', include('accounts.urls')),
-    path('products/', include('products.urls')),
-    path('orders/', include('orders.urls')),
-    path('payments/', include('payments.urls')),
-    path('reviews/', include('reviews.urls')),
-    path('dashboard/', include('dashboard.urls')),
+
+    # Products app
+    path('', include('products.urls')),
+
+    # Accounts app
+    path('', include('accounts.urls')),
+
+    # Orders app
+    path('', include('orders.urls')),
+
+    # Payments app
+    path('', include('payments.urls')),
+
+    # Reviews app
+    path('', include('reviews.urls')),
+
+    # Dashboard app
+    path('', include('dashboard.urls')),
 ]
 
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(
+        settings.MEDIA_URL,
+        document_root=settings.MEDIA_ROOT
+    )

@@ -1,5 +1,138 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block title %}Customer Dashboard | GreenHarvest{% endblock %}
+
 {% block content %}
-<section class="customer-dashboard py-5"><div class="container"><div class="customer-head"><div><span class="eyebrow">GreenHarvest Customer</span><h1>Welcome back, {{ user.first_name|default:user.username }}</h1><p>Discover fresh produce, manage your orders and keep your rewards growing.</p></div><a href="{% url 'product_list' %}" class="btn btn-success btn-lg rounded-pill px-4"><i class="bi bi-basket me-2"></i>Shop Products</a></div><div class="row g-4 mt-1"><div class="col-md-3"><div class="customer-stat"><span><i class="bi bi-receipt"></i></span><small>My Orders</small><strong>{{ order_count }}</strong></div></div><div class="col-md-3"><div class="customer-stat"><span><i class="bi bi-stars"></i></span><small>Reward Points</small><strong>{{ user.profile.reward_points }}</strong></div></div><div class="col-md-3"><div class="customer-stat"><span><i class="bi bi-cart3"></i></span><small>Shopping Cart</small><a href="{% url 'cart' %}">Open cart <i class="bi bi-arrow-right"></i></a></div></div><div class="col-md-3"><div class="customer-stat"><span><i class="bi bi-bell"></i></span><small>Notifications</small><a href="{% url 'notifications' %}">View updates <i class="bi bi-arrow-right"></i></a></div></div></div><div class="row g-4 mt-2"><div class="col-lg-8"><div class="panel-card"><div class="section-heading"><div><h4>Recent Orders</h4><span>Track your latest purchases</span></div><a href="{% url 'my_orders' %}">View All <i class="bi bi-arrow-right"></i></a></div>{% for o in orders %}<div class="customer-order-row"><div><strong>{{ o.order_number }}</strong><small>{{ o.created_at|date:"d M Y" }}</small></div><div>₹{{ o.total_amount|floatformat:2 }}</div><span class="status-pill {% if o.status == 'DELIVERED' %}success{% elif o.status == 'CANCELLED' %}danger{% elif o.status == 'PENDING' %}warning{% else %}blue{% endif %}">{{ o.status|title }}</span><a href="{% url 'order_detail' o.id %}">View</a></div>{% empty %}<div class="empty-state"><i class="bi bi-receipt"></i><p>No orders yet.</p><a href="{% url 'product_list' %}" class="btn btn-success rounded-pill">Start Shopping</a></div>{% endfor %}</div></div><div class="col-lg-4"><div class="customer-side-card"><h4>Quick Actions</h4><a href="{% url 'wishlist' %}"><i class="bi bi-heart"></i> Wishlist</a><a href="{% url 'rewards' %}"><i class="bi bi-stars"></i> Rewards</a><a href="{% url 'notifications' %}"><i class="bi bi-bell"></i> Notifications</a><a href="{% url 'product_list' %}"><i class="bi bi-basket"></i> Browse Products</a></div></div></div></div></section>
+<style>
+.customer-hero{background:linear-gradient(115deg,#f5fbf6,#e2f5e8);padding:60px 0;overflow:hidden}
+.customer-hero h1{color:#173b29;font-size:clamp(2.5rem,5vw,4.2rem);font-weight:900;line-height:1.08;letter-spacing:-1.5px}
+.customer-hero h1 span{color:#13894e}
+.customer-hero p{color:#586c60;line-height:1.8}
+.customer-label{color:#13894e;font-weight:800}
+.customer-image{width:100%;height:420px;object-fit:cover;border-radius:28px;box-shadow:0 18px 45px #173b2918}
+.customer-btn{display:inline-block;padding:12px 23px;border-radius:30px;background:#13894e;color:white;text-decoration:none;font-weight:700}
+.customer-btn:hover{background:#096d3b;color:white}
+.customer-outline{display:inline-block;padding:11px 23px;border:1px solid #173b29;border-radius:30px;color:#173b29;text-decoration:none;font-weight:600}
+.customer-section{background:#fbfdfb;padding:42px 0 55px}
+.customer-card,.customer-panel{background:#fff;border:1px solid #e6eee8;border-radius:18px;padding:23px;height:100%;box-shadow:0 5px 22px #173b2908}
+.customer-icon{display:flex;align-items:center;justify-content:center;width:44px;height:44px;background:#e9f7ee;border-radius:13px;font-size:22px;margin-bottom:14px}
+.customer-card small,.customer-muted{color:#758279}
+.customer-card strong{display:block;color:#173b29;font-size:1.5rem;margin-top:5px}
+.customer-panel h3{color:#173b29;font-weight:800}
+.customer-order{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:15px 0;border-bottom:1px solid #edf1ed}
+.customer-order:last-child{border-bottom:0}
+.customer-muted{font-size:.92rem}
+@media(max-width:767px){.customer-hero{padding:35px 0}.customer-image{height:270px;margin-top:10px}}
+</style>
+
+<section class="customer-hero">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <div class="customer-label mb-3">Fresh from the farm · Direct to home</div>
+        <h1>Better food starts with a <span>better connection.</span></h1>
+        <p class="mt-4">
+          Welcome, {{ user.first_name|default:user.username }}!
+          GreenHarvest brings farmers and customers together so you can
+          discover fresh agricultural products directly from farmers.
+        </p>
+        <div class="d-flex flex-wrap gap-3 mt-4">
+          <a href="/" class="customer-btn">🛒 Shop Fresh Products</a>
+          <a href="#my-orders" class="customer-outline">My Orders</a>
+        </div>
+        <div class="customer-muted mt-4">✓ Trusted farmers &nbsp; ✓ Fair pricing &nbsp; ✓ Fresh products</div>
+      </div>
+      <div class="col-lg-6">
+        <img src="{% static 'images/farmer-hero.png' %}"
+             alt="Farmer with fresh agricultural products"
+             class="customer-image"
+             onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=85';">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="customer-section">
+  <div class="container">
+    <div class="mb-4">
+      <h2 class="fw-bold" style="color:#173b29">Your Dashboard</h2>
+      <p class="customer-muted">Manage your shopping and check your recent orders.</p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-6 col-lg-3">
+        <div class="customer-card">
+          <div class="customer-icon">📦</div>
+          <small>My Orders</small>
+          <strong>{{ order_count|default:0 }}</strong>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="customer-card">
+          <div class="customer-icon">🛒</div>
+          <small>Shopping</small>
+          <strong style="font-size:1.1rem"><a href="/" style="color:#13894e;text-decoration:none">Shop Products →</a></strong>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="customer-card">
+          <div class="customer-icon">🌱</div>
+          <small>Marketplace</small>
+          <strong style="font-size:1.1rem">Farm Direct</strong>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="customer-card">
+          <div class="customer-icon">⭐</div>
+          <small>Fresh Choices</small>
+          <strong style="font-size:1.1rem">Quality Food</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4 mt-2" id="my-orders">
+      <div class="col-lg-8">
+        <div class="customer-panel">
+          <h3>Recent Orders</h3>
+          <p class="customer-muted">Check your latest purchases.</p>
+
+          {% for order in orders %}
+          <div class="customer-order">
+            <div>
+              <strong>Order #{{ order.order_number|default:order.id }}</strong>
+              <div class="customer-muted">{{ order.created_at|date:"d M Y" }}</div>
+            </div>
+            <div>
+              <strong>₹{{ order.total_amount|default:0|floatformat:2 }}</strong>
+              <div class="customer-muted">{{ order.status|default:"Pending"|title }}</div>
+            </div>
+          </div>
+          {% empty %}
+          <div class="text-center py-4">
+            <div style="font-size:40px">🛒</div>
+            <h5>No orders yet</h5>
+            <p class="customer-muted">Start shopping for fresh farm products.</p>
+            <a href="/" class="customer-btn">Browse Products</a>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="customer-panel">
+          <h3>Quick Actions</h3>
+          <div class="d-grid gap-3 mt-4">
+            <a href="/" class="customer-btn text-center">Browse Products</a>
+            <a href="#my-orders" class="customer-outline text-center">View My Orders</a>
+          </div>
+          <hr>
+          <p class="customer-muted mb-0">
+            Supporting farmers. Enjoying fresher food. Growing together with GreenHarvest.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 {% endblock %}

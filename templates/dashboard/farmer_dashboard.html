@@ -1,157 +1,207 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}My Farm | GreenHarvest{% endblock %}
+
+{% block title %}Farmer Dashboard | GreenHarvest{% endblock %}
+
 {% block content %}
+<style>
+.farmer-hero{background:linear-gradient(115deg,#f5fbf6,#e2f5e8);padding:55px 0;overflow:hidden}
+.farmer-hero h1{color:#173b29;font-size:clamp(2.4rem,4.5vw,4rem);font-weight:900;line-height:1.1;letter-spacing:-1.5px}
+.farmer-hero h1 span{color:#13894e}
+.farmer-hero p{color:#586c60;line-height:1.8}
+.farmer-eyebrow{color:#13894e;font-weight:800}
+.farmer-hero-image{width:100%;height:420px;object-fit:cover;border-radius:28px;box-shadow:0 18px 45px #173b2918}
+.farmer-btn{display:inline-block;padding:12px 22px;border-radius:30px;background:#13894e;color:#fff;text-decoration:none;font-weight:700}
+.farmer-btn:hover{background:#096d3b;color:#fff}
+.farmer-outline{display:inline-block;padding:11px 22px;border:1px solid #173b29;border-radius:30px;color:#173b29;text-decoration:none}
+.farmer-section{background:#fbfdfb;padding:42px 0 55px}
+.farmer-card,.farmer-panel{background:#fff;border:1px solid #e6eee8;border-radius:18px;padding:22px;height:100%;box-shadow:0 5px 22px #173b2908}
+.farmer-card h4,.farmer-panel h4{color:#173b29;font-weight:800}
+.farmer-icon{display:flex;align-items:center;justify-content:center;width:44px;height:44px;background:#e9f7ee;border-radius:13px;font-size:22px;margin-bottom:13px}
+.farmer-card small,.farmer-muted{color:#758279}
+.farmer-card strong{display:block;color:#173b29;font-size:1.5rem;margin-top:5px}
+.farmer-product{border:1px solid #edf1ed;border-radius:14px;overflow:hidden;height:100%}
+.farmer-product-image{width:100%;height:140px;object-fit:cover}
+.farmer-placeholder{height:140px;display:flex;align-items:center;justify-content:center;background:#f0f7f1;color:#758279}
+.farmer-product-name{font-weight:700;color:#173b29;overflow-wrap:anywhere}
+.farmer-price{color:#13894e;font-weight:800}
+.farmer-panel .table{margin-bottom:0;vertical-align:middle}
+.farmer-panel th{font-size:.85rem;color:#53665a;white-space:nowrap}
+.farmer-panel td{font-size:.92rem;color:#33483a}
+.farmer-chart{position:relative;height:260px}
+.farmer-link{display:flex;justify-content:space-between;gap:12px;padding:14px 0;text-decoration:none;color:#33483a;border-bottom:1px solid #edf1ed}
+.farmer-link:last-child{border-bottom:0}
+.farmer-link:hover{color:#13894e}
+@media(max-width:767px){.farmer-hero{padding:35px 0}.farmer-hero-image{height:270px;margin-top:10px}}
+</style>
+
 <section class="farmer-hero">
-    <div class="farmer-hero-overlay"></div>
-    <div class="container position-relative py-4 py-lg-5">
-        <div class="row align-items-center g-4">
-            <div class="col-lg-6">
-                <span class="eyebrow">Empowering Farmers <i class="bi bi-dot"></i> Growing Together</span>
-                <h1>Sell Your Fresh Produce <span>Directly to Customers</span></h1>
-                <p>GreenHarvest helps you showcase farm-fresh products, reach more customers and get better prices—without unnecessary middlemen.</p>
-                <div class="d-flex flex-wrap gap-3">
-                    <a href="{% url 'product_create' %}" class="btn btn-success btn-lg rounded-pill px-4"><i class="bi bi-plus-circle me-2"></i>Add New Product</a>
-                    <a href="{% url 'farmer_products' %}" class="btn btn-light btn-lg rounded-pill px-4"><i class="bi bi-box-seam me-2"></i>View My Products</a>
-                </div>
-            </div>
-            <div class="col-lg-6 hero-farmer-visual">
-                <img src="{% static 'images/farmer-hero.png' %}" alt="Farmer with fresh vegetables">
-                <div class="hero-quote">Healthy Soil<br>Healthy Food<br>Happy Future <span>⌁</span></div>
-            </div>
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <div class="farmer-eyebrow mb-3">Empowering Farmers · Growing Together</div>
+        <h1>Better food starts with a <span>better connection.</span></h1>
+        <p class="mt-4">
+          Welcome, {{ user.first_name|default:user.username }}!
+          Showcase your farm-fresh products, reach customers directly,
+          and manage your products and orders with GreenHarvest.
+        </p>
+        <div class="d-flex flex-wrap gap-3 mt-4">
+          <a href="/products/create/" class="farmer-btn">＋ Add New Product</a>
+          <a href="#my-products" class="farmer-outline">View My Products</a>
         </div>
+        <div class="farmer-muted mt-4">✓ Direct market access &nbsp; ✓ Fair pricing &nbsp; ✓ Grow your business</div>
+      </div>
+      <div class="col-lg-6">
+        <img src="{% static 'images/farmer-hero.png' %}"
+             alt="Farmer with fresh vegetables"
+             class="farmer-hero-image"
+             onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=85';">
+      </div>
     </div>
+  </div>
 </section>
 
-<section class="benefit-strip">
-    <div class="container">
-        <div class="row g-0">
-            <div class="col-6 col-lg"><div class="benefit-item"><span><i class="bi bi-leaf"></i></span><strong>Direct Market Access</strong><small>Sell without middlemen</small></div></div>
-            <div class="col-6 col-lg"><div class="benefit-item"><span><i class="bi bi-currency-rupee"></i></span><strong>Better Prices</strong><small>Get fair value for your crop</small></div></div>
-            <div class="col-6 col-lg"><div class="benefit-item"><span><i class="bi bi-truck"></i></span><strong>Wide Reach</strong><small>Connect with customers</small></div></div>
-            <div class="col-6 col-lg"><div class="benefit-item"><span><i class="bi bi-shield-check"></i></span><strong>Secure &amp; Trusted</strong><small>Safe transactions &amp; support</small></div></div>
-            <div class="col-12 col-lg"><div class="benefit-item"><span><i class="bi bi-flower1"></i></span><strong>Sustainable Farming</strong><small>A greener tomorrow</small></div></div>
-        </div>
+<section class="farmer-section">
+  <div class="container">
+    <div class="mb-4">
+      <h2 class="fw-bold" style="color:#173b29">Your Farm Dashboard</h2>
+      <p class="farmer-muted">Manage products, track orders and review your sales.</p>
     </div>
-</section>
 
-<section class="farmer-workspace py-5">
-    <div class="container">
-        <div class="row g-4">
-            <div class="col-xl-4">
-                <div class="panel-card h-100">
-                    <div class="section-heading d-flex justify-content-between align-items-center">
-                        <div><h4><i class="bi bi-flower1 me-2"></i>Your Products</h4><span>Manage your latest listings</span></div>
-                        <a href="{% url 'farmer_products' %}">View All <i class="bi bi-arrow-right"></i></a>
-                    </div>
-                    <div class="row g-3">
-                        {% for p in products %}
-                        <div class="col-6">
-                            <div class="mini-product-card">
-                                {% if p.image %}<img src="{{ p.image.url }}" alt="{{ p.name }}">{% else %}<div class="mini-product-placeholder"><i class="bi bi-image"></i></div>{% endif %}
-                                <div class="p-3">
-                                    <div class="d-flex justify-content-between gap-2"><strong>{{ p.name }}</strong><span class="status-pill {% if p.stock <= 3 %}warning{% else %}success{% endif %}">{% if p.is_available %}Active{% else %}Off{% endif %}</span></div>
-                                    <div class="product-price">₹{{ p.price }}/{{ p.unit }}</div>
-                                    <small>Stock: {{ p.stock }} {{ p.unit }}</small>
-                                </div>
-                            </div>
-                        </div>
-                        {% empty %}
-                        <div class="col-12"><div class="empty-state"><i class="bi bi-box-seam"></i><p>No products yet.</p><a href="{% url 'product_create' %}" class="btn btn-success rounded-pill">Add your first product</a></div></div>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xl-5" id="analytics">
-                <div class="farm-overview-card h-100">
-                    <div class="overview-header">
-                        <div><h4><i class="bi bi-bar-chart-fill me-2"></i>Farm Overview</h4><span>Track sales and performance</span></div>
-                        <span class="month-chip"><i class="bi bi-calendar3 me-1"></i>This Week</span>
-                    </div>
-                    <div class="stat-grid">
-                        <div class="farm-stat"><span><i class="bi bi-box-seam"></i></span><small>Total Products</small><strong>{{ product_count }}</strong></div>
-                        <div class="farm-stat"><span><i class="bi bi-cart-check"></i></span><small>Total Orders</small><strong>{{ order_count }}</strong></div>
-                        <div class="farm-stat"><span><i class="bi bi-currency-rupee"></i></span><small>Total Revenue</small><strong>₹{{ revenue|floatformat:0 }}</strong></div>
-                        <div class="farm-stat"><span><i class="bi bi-clock-history"></i></span><small>Pending Orders</small><strong>{{ pending_count }}</strong></div>
-                    </div>
-                    <div class="chart-header"><h5>Sales Overview</h5><span>Last 7 days</span></div>
-                    <div class="farmer-chart-wrap"><canvas id="farmerSalesChart"></canvas></div>
-                </div>
-            </div>
-
-            <div class="col-xl-3">
-                <div class="quick-links-card h-100">
-                    <h4><i class="bi bi-grid-1x2-fill me-2"></i>Quick Links</h4>
-                    <a href="{% url 'product_create' %}"><span><i class="bi bi-plus-circle"></i> Add New Product</span><i class="bi bi-chevron-right"></i></a>
-                    <a href="{% url 'farmer_products' %}"><span><i class="bi bi-box-seam"></i> Manage Products</span><i class="bi bi-chevron-right"></i></a>
-                    <a href="{% url 'farmer_orders' %}"><span><i class="bi bi-receipt"></i> View Orders</span><i class="bi bi-chevron-right"></i></a>
-                    <a href="{% url 'notifications' %}"><span><i class="bi bi-bell"></i> Notifications</span><i class="bi bi-chevron-right"></i></a>
-                    <a href="{% url 'farmer_dashboard' %}#analytics"><span><i class="bi bi-bar-chart"></i> Analytics</span><i class="bi bi-chevron-right"></i></a>
-                    <a href="{% url 'home' %}"><span><i class="bi bi-headset"></i> Help &amp; Support</span><i class="bi bi-chevron-right"></i></a>
-                    <div class="growth-banner mt-3"><span class="small">Together We Grow</span><strong>A Healthier Planet</strong><small>Sustainable farming for a better tomorrow</small></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row g-4 mt-1">
-            <div class="col-lg-8">
-                <div class="panel-card">
-                    <div class="section-heading"><div><h4>Recent Customer Orders</h4><span>Your latest sales activity</span></div><a href="{% url 'farmer_orders' %}">View All <i class="bi bi-arrow-right"></i></a></div>
-                    <div class="table-responsive">
-                        <table class="table farm-table align-middle">
-                            <thead><tr><th>Order</th><th>Customer</th><th>Amount</th><th>Status</th></tr></thead>
-                            <tbody>
-                            {% for o in recent_orders %}
-                            <tr><td><strong>{{ o.order_number }}</strong><small>{{ o.created_at|date:"d M Y" }}</small></td><td>{{ o.customer.get_full_name|default:o.customer.username }}</td><td class="fw-semibold">₹{{ o.total_amount|floatformat:2 }}</td><td><span class="status-pill {% if o.status == 'DELIVERED' %}success{% elif o.status == 'CANCELLED' %}danger{% elif o.status == 'PENDING' %}warning{% else %}blue{% endif %}">{{ o.status|title }}</span></td></tr>
-                            {% empty %}<tr><td colspan="4" class="text-center text-muted py-4">No customer orders yet.</td></tr>{% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="panel-card h-100">
-                    <div class="section-heading"><div><h4>Top Products</h4><span>Best sellers on your farm</span></div></div>
-                    {% for p in top_products %}
-                    <div class="top-product-row"><div class="top-product-icon"><i class="bi bi-box"></i></div><div class="flex-grow-1"><strong>{{ p.product_name }}</strong><small>{{ p.quantity }} sold</small></div><strong class="text-success">₹{{ p.revenue|floatformat:0 }}</strong></div>
-                    {% empty %}<div class="empty-state compact"><i class="bi bi-bar-chart"></i><p>Sales data will appear here after deliveries.</p></div>{% endfor %}
-                </div>
-            </div>
-        </div>
+    <div class="row g-4 mb-4">
+      <div class="col-6 col-xl-3"><div class="farmer-card"><div class="farmer-icon">🥬</div><small>Total Products</small><strong>{{ product_count|default:products.count }}</strong></div></div>
+      <div class="col-6 col-xl-3"><div class="farmer-card"><div class="farmer-icon">📦</div><small>Total Orders</small><strong>{{ order_count|default:0 }}</strong></div></div>
+      <div class="col-6 col-xl-3"><div class="farmer-card"><div class="farmer-icon">💰</div><small>Total Revenue</small><strong>₹{{ revenue|default:0|floatformat:2 }}</strong></div></div>
+      <div class="col-6 col-xl-3"><div class="farmer-card"><div class="farmer-icon">⏳</div><small>Pending Orders</small><strong>{{ pending_count|default:0 }}</strong></div></div>
     </div>
+
+    <div class="row g-4 mb-4">
+      <div class="col-lg-8" id="my-products">
+        <div class="farmer-panel">
+          <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+            <div>
+              <h4 class="mb-1">Your Products</h4>
+              <p class="farmer-muted mb-0">Manage your latest product listings.</p>
+            </div>
+            <a href="/products/create/" class="farmer-btn">＋ Add Product</a>
+          </div>
+
+          <div class="row g-3">
+            {% for p in products %}
+            <div class="col-6 col-md-4">
+              <div class="farmer-product">
+                {% if p.image %}
+                  <img src="{{ p.image.url }}" alt="{{ p.name }}" class="farmer-product-image"
+                       onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                  <div class="farmer-placeholder" style="display:none">Image unavailable</div>
+                {% else %}
+                  <div class="farmer-placeholder">🌱 No image</div>
+                {% endif %}
+                <div class="p-3">
+                  <div class="farmer-product-name">{{ p.name }}</div>
+                  <div class="farmer-price mt-1">₹{{ p.price }}{% if p.unit %}/{{ p.unit }}{% endif %}</div>
+                  <small class="farmer-muted">Stock: {{ p.stock|default:0 }}</small>
+                  <div class="mt-2">
+                    {% if p.stock|default:0 <= 3 %}
+                      <span class="badge bg-warning text-dark">Low stock</span>
+                    {% else %}
+                      <span class="badge bg-success">Available</span>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-4">
+              <div style="font-size:40px">🌱</div>
+              <h5>No products added yet</h5>
+              <p class="farmer-muted">Add your first product to start selling.</p>
+              <a href="/products/create/" class="farmer-btn">Add Your First Product</a>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4" id="quick-links">
+        <div class="farmer-panel">
+          <h4>Quick Links</h4>
+          <a href="/products/create/" class="farmer-link"><span>＋ Add New Product</span><span>›</span></a>
+          <a href="/products/" class="farmer-link"><span>🥬 Browse Products</span><span>›</span></a>
+          <a href="/farmer/" class="farmer-link"><span>📊 Farm Dashboard</span><span>›</span></a>
+          <a href="/" class="farmer-link"><span>🏠 Visit Marketplace</span><span>›</span></a>
+          <hr>
+          <p class="farmer-muted mb-0">Together we grow a healthier planet through sustainable farming.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-6">
+        <div class="farmer-panel">
+          <h4>Sales Overview</h4>
+          <p class="farmer-muted">Review your sales performance.</p>
+          <div class="farmer-chart"><canvas id="farmerSalesChart"></canvas></div>
+        </div>
+      </div>
+
+      <div class="col-lg-6" id="recent-orders">
+        <div class="farmer-panel">
+          <h4>Recent Customer Orders</h4>
+          <div class="table-responsive">
+            <table class="table">
+              <thead><tr><th>Order</th><th>Customer</th><th>Amount</th><th>Status</th></tr></thead>
+              <tbody>
+                {% for o in recent_orders %}
+                <tr>
+                  <td>{{ o.order_number|default:o.id }}</td>
+                  <td>{{ o.customer.username|default:"Customer" }}</td>
+                  <td>₹{{ o.total_amount|default:0|floatformat:2 }}</td>
+                  <td><span class="badge bg-success">{{ o.status|default:"Pending"|title }}</span></td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4" class="text-center py-4">No customer orders yet.</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 {% endblock %}
 
 {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-const ctx = document.getElementById('farmerSalesChart');
-if (ctx) {
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: {{ sales_labels|safe }},
-            datasets: [{
-                label: 'Sales (₹)',
-                data: {{ sales_values|safe }},
-                fill: true,
-                tension: 0.35,
-                pointRadius: 4,
-                pointHoverRadius: 6,
-                borderWidth: 3
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: {
-                y: { beginAtZero: true, grid: { color: 'rgba(25,135,84,.08)' } },
-                x: { grid: { display: false } }
-            }
-        }
-    });
-}
+document.addEventListener('DOMContentLoaded', function () {
+  const canvas = document.getElementById('farmerSalesChart');
+  if (!canvas || typeof Chart === 'undefined') return;
+
+  new Chart(canvas, {
+    type: 'line',
+    data: {
+      labels: {{ sales_labels|default:"[]"|safe }},
+      datasets: [{
+        label: 'Sales (₹)',
+        data: {{ sales_values|default:"[]"|safe }},
+        borderColor: '#13894e',
+        backgroundColor: 'rgba(19,137,78,0.12)',
+        pointBackgroundColor: '#13894e',
+        borderWidth: 3,
+        fill: true,
+        tension: 0.35
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true } }
+    }
+  });
+});
 </script>
 {% endblock %}

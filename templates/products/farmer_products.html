@@ -42,147 +42,119 @@
                                 <div class="table-product">
 
                                     {% with name=p.name|lower %}
-                                        {% if 'white onion' in name %}
-                                            <img src="{% static 'images/products/white onion.jpg' %}"
-                                                 alt="{{ p.name }}"
-                                                 onerror="this.style.display='none';">
+
+                                        {% if 'white onion' in name or 'white_onion' in name or 'white-onion' in name %}
+                                            <img
+                                                src="{% static 'images/products/white onion.jpg' %}"
+                                                alt="{{ p.name }}"
+                                                class="img-fluid"
+                                                style="width:60px;height:60px;object-fit:cover;border-radius:8px;"
+                                                onerror="this.onerror=null;this.src='{% static 'images/products/onion.jpg' %}';">
 
                                         {% elif 'tomato' in name %}
-                                            <img src="{% static 'images/products/tomato.jpg' %}"
-                                                 alt="{{ p.name }}"
-                                                 onerror="this.style.display='none';">
+                                            <img
+                                                src="{% static 'images/products/tomato.jpg' %}"
+                                                alt="{{ p.name }}"
+                                                class="img-fluid"
+                                                style="width:60px;height:60px;object-fit:cover;border-radius:8px;"
+                                                onerror="this.style.display='none';">
 
                                         {% elif 'onion' in name %}
-                                            <img src="{% static 'images/products/onion.jpg' %}"
-                                                 alt="{{ p.name }}"
-                                                 onerror="this.style.display='none';">
+                                            <img
+                                                src="{% static 'images/products/onion.jpg' %}"
+                                                alt="{{ p.name }}"
+                                                class="img-fluid"
+                                                style="width:60px;height:60px;object-fit:cover;border-radius:8px;"
+                                                onerror="this.style.display='none';">
 
                                         {% elif 'banana' in name %}
-                                            <img src="{% static 'images/products/banana.jpg' %}"
-                                                 alt="{{ p.name }}"
-                                                 onerror="this.style.display='none';">
+                                            <img src="{% static 'images/products/banana.jpg' %}" alt="{{ p.name }}" class="img-fluid" style="width:60px;height:60px;object-fit:cover;border-radius:8px;" onerror="this.style.display='none';">
 
                                         {% elif 'brinjal' in name %}
-                                            <img src="{% static 'images/products/brinjal.png' %}"
-                                                 alt="{{ p.name }}"
-                                                 onerror="this.style.display='none';">
+                                            <img src="{% static 'images/products/brinjal.png' %}" alt="{{ p.name }}" class="img-fluid" style="width:60px;height:60px;object-fit:cover;border-radius:8px;" onerror="this.style.display='none';">
 
                                         {% elif 'cabbage' in name %}
-                                            <img src="{% static 'images/products/cabbage.jpg' %}"
-                                                 alt="{{ p.name }}"
-                                                 onerror="this.style.display='none';">
+                                            <img src="{% static 'images/products/cabbage.jpg' %}" alt="{{ p.name }}" class="img-fluid" style="width:60px;height:60px;object-fit:cover;border-radius:8px;" onerror="this.style.display='none';">
 
                                         {% elif 'carrot' in name %}
-                                            <img src="{% static 'images/products/carrot.jpg' %}"
-                                                 alt="{{ p.name }}"
-                                                 onerror="this.style.display='none';">
+                                            <img src="{% static 'images/products/carrot.jpg' %}" alt="{{ p.name }}" class="img-fluid" style="width:60px;height:60px;object-fit:cover;border-radius:8px;" onerror="this.style.display='none';">
 
                                         {% elif 'cauliflower' in name %}
-                                            <img src="{% static 'images/products/cauliflower.jpg' %}"
-                                                 alt="{{ p.name }}"
-                                                 onerror="this.style.display='none';">
+                                            <img src="{% static 'images/products/cauliflower.jpg' %}" alt="{{ p.name }}" class="img-fluid" style="width:60px;height:60px;object-fit:cover;border-radius:8px;" onerror="this.style.display='none';">
 
                                         {% elif 'coconut' in name %}
-                                            <img src="{% static 'images/products/Coconut.jpg' %}"
-                                                 alt="{{ p.name }}"
-                                                 onerror="this.style.display='none';">
+                                            <img src="{% static 'images/products/Coconut.jpg' %}" alt="{{ p.name }}" class="img-fluid" style="width:60px;height:60px;object-fit:cover;border-radius:8px;" onerror="this.style.display='none';">
 
                                         {% elif 'coriander' in name %}
-                                            <img src="{% static 'images/products/Coriander Leaves.jpg' %}"
-                                                 alt="{{ p.name }}"
-                                                 onerror="this.style.display='none';">
+                                            <img src="{% static 'images/products/Coriander Leaves.jpg' %}" alt="{{ p.name }}" class="img-fluid" style="width:60px;height:60px;object-fit:cover;border-radius:8px;" onerror="this.style.display='none';">
 
                                         {% elif 'cucumber' in name %}
-                                            <img src="{% static 'images/products/cucumber.jpg' %}"
-                                                 alt="{{ p.name }}"
-                                                 onerror="this.style.display='none';">
+                                            <img src="{% static 'images/products/cucumber.jpg' %}" alt="{{ p.name }}" class="img-fluid" style="width:60px;height:60px;object-fit:cover;border-radius:8px;" onerror="this.style.display='none';">
 
                                         {% elif 'drumstick' in name %}
-                                            <img src="{% static 'images/products/drumstick.jpg' %}"
-                                                 alt="{{ p.name }}"
-                                                 onerror="this.style.display='none';">
+                                            <img src="{% static 'images/products/drumstick.jpg' %}" alt="{{ p.name }}" class="img-fluid" style="width:60px;height:60px;object-fit:cover;border-radius:8px;" onerror="this.style.display='none';">
 
                                         {% elif 'chilli' in name %}
-                                            <img src="{% static 'images/products/green-chilli.jpg' %}"
-                                                 alt="{{ p.name }}"
-                                                 onerror="this.style.display='none';">
+                                            <img src="{% static 'images/products/green-chilli.jpg' %}" alt="{{ p.name }}" class="img-fluid" style="width:60px;height:60px;object-fit:cover;border-radius:8px;" onerror="this.style.display='none';">
 
                                         {% elif 'guava' in name %}
-                                            <img src="{% static 'images/products/Guava.jpg' %}"
-                                                 alt="{{ p.name }}"
-                                                 onerror="this.style.display='none';">
+                                            <img src="{% static 'images/products/Guava.jpg' %}" alt="{{ p.name }}" class="img-fluid" style="width:60px;height:60px;object-fit:cover;border-radius:8px;" onerror="this.style.display='none';">
 
                                         {% elif 'jackfruit' in name %}
-                                            <img src="{% static 'images/products/Jackfruit.jpg' %}"
-                                                 alt="{{ p.name }}"
-                                                 onerror="this.style.display='none';">
+                                            <img src="{% static 'images/products/Jackfruit.jpg' %}" alt="{{ p.name }}" class="img-fluid" style="width:60px;height:60px;object-fit:cover;border-radius:8px;" onerror="this.style.display='none';">
 
                                         {% elif 'ladies finger' in name or 'lady finger' in name or 'okra' in name %}
-                                            <img src="{% static 'images/products/ladies-finger.jpg' %}"
-                                                 alt="{{ p.name }}"
-                                                 onerror="this.style.display='none';">
+                                            <img src="{% static 'images/products/ladies-finger.jpg' %}" alt="{{ p.name }}" class="img-fluid" style="width:60px;height:60px;object-fit:cover;border-radius:8px;" onerror="this.style.display='none';">
 
                                         {% elif 'mango' in name %}
-                                            <img src="{% static 'images/products/mango.jpg' %}"
-                                                 alt="{{ p.name }}"
-                                                 onerror="this.style.display='none';">
+                                            <img src="{% static 'images/products/mango.jpg' %}" alt="{{ p.name }}" class="img-fluid" style="width:60px;height:60px;object-fit:cover;border-radius:8px;" onerror="this.style.display='none';">
 
                                         {% elif 'mint' in name %}
-                                            <img src="{% static 'images/products/Mint Leaves.jpg' %}"
-                                                 alt="{{ p.name }}"
-                                                 onerror="this.style.display='none';">
+                                            <img src="{% static 'images/products/Mint Leaves.jpg' %}" alt="{{ p.name }}" class="img-fluid" style="width:60px;height:60px;object-fit:cover;border-radius:8px;" onerror="this.style.display='none';">
 
                                         {% elif 'papaya' in name %}
-                                            <img src="{% static 'images/products/Papaya.jpg' %}"
-                                                 alt="{{ p.name }}"
-                                                 onerror="this.style.display='none';">
+                                            <img src="{% static 'images/products/Papaya.jpg' %}" alt="{{ p.name }}" class="img-fluid" style="width:60px;height:60px;object-fit:cover;border-radius:8px;" onerror="this.style.display='none';">
 
                                         {% elif 'pomegranate' in name %}
-                                            <img src="{% static 'images/products/Pomegranate.jpg' %}"
-                                                 alt="{{ p.name }}"
-                                                 onerror="this.style.display='none';">
+                                            <img src="{% static 'images/products/Pomegranate.jpg' %}" alt="{{ p.name }}" class="img-fluid" style="width:60px;height:60px;object-fit:cover;border-radius:8px;" onerror="this.style.display='none';">
 
                                         {% elif 'potato' in name %}
-                                            <img src="{% static 'images/products/potato.jpg' %}"
-                                                 alt="{{ p.name }}"
-                                                 onerror="this.style.display='none';">
+                                            <img src="{% static 'images/products/potato.jpg' %}" alt="{{ p.name }}" class="img-fluid" style="width:60px;height:60px;object-fit:cover;border-radius:8px;" onerror="this.style.display='none';">
 
                                         {% elif 'pumpkin' in name %}
-                                            <img src="{% static 'images/products/pumpkin.jpg' %}"
-                                                 alt="{{ p.name }}"
-                                                 onerror="this.style.display='none';">
+                                            <img src="{% static 'images/products/pumpkin.jpg' %}" alt="{{ p.name }}" class="img-fluid" style="width:60px;height:60px;object-fit:cover;border-radius:8px;" onerror="this.style.display='none';">
 
                                         {% elif 'spinach' in name or 'leafy green' in name %}
-                                            <img src="{% static 'images/products/Spinach.jpg' %}"
-                                                 alt="{{ p.name }}"
-                                                 onerror="this.style.display='none';">
+                                            <img src="{% static 'images/products/Spinach.jpg' %}" alt="{{ p.name }}" class="img-fluid" style="width:60px;height:60px;object-fit:cover;border-radius:8px;" onerror="this.style.display='none';">
 
                                         {% elif 'sweet lime' in name %}
-                                            <img src="{% static 'images/products/Sweet Lime.jpg' %}"
-                                                 alt="{{ p.name }}"
-                                                 onerror="this.style.display='none';">
+                                            <img src="{% static 'images/products/Sweet Lime.jpg' %}" alt="{{ p.name }}" class="img-fluid" style="width:60px;height:60px;object-fit:cover;border-radius:8px;" onerror="this.style.display='none';">
 
                                         {% elif 'watermelon' in name %}
-                                            <img src="{% static 'images/products/Watermelon.jpg' %}"
-                                                 alt="{{ p.name }}"
-                                                 onerror="this.style.display='none';">
+                                            <img src="{% static 'images/products/Watermelon.jpg' %}" alt="{{ p.name }}" class="img-fluid" style="width:60px;height:60px;object-fit:cover;border-radius:8px;" onerror="this.style.display='none';">
 
                                         {% elif p.image %}
-                                            <img src="{{ p.image.url }}"
-                                                 alt="{{ p.name }}"
-                                                 onerror="this.style.display='none';">
+                                            <img
+                                                src="{{ p.image.url }}"
+                                                alt="{{ p.name }}"
+                                                class="img-fluid"
+                                                style="width:60px;height:60px;object-fit:cover;border-radius:8px;"
+                                                onerror="this.style.display='none';">
 
                                         {% else %}
-                                            <span>
+                                            <span class="d-inline-flex align-items-center justify-content-center"
+                                                  style="width:60px;height:60px;background:#f0f0f0;border-radius:8px;">
                                                 <i class="bi bi-image"></i>
                                             </span>
                                         {% endif %}
+
                                     {% endwith %}
 
                                     <div>
                                         <strong>{{ p.name }}</strong>
                                         <small>{{ p.location|default:'Local farm' }}</small>
                                     </div>
+
                                 </div>
                             </td>
 
@@ -239,4 +211,3 @@
     </div>
 </section>
 {% endblock %}
-```

@@ -1,12 +1,233 @@
-{% extends 'base.html' %}{% block title %}Admin Dashboard | GreenHarvest{% endblock %}{% block content %}
-<div class="container-fluid py-5 px-4"><div class="d-flex justify-content-between align-items-center mb-4"><div><span class="badge bg-success">Administration</span><h1>GreenHarvest Analytics Dashboard</h1><p class="text-muted">Live business overview.</p></div><a class="btn btn-dark" href="/admin/">Django Admin</a></div><div class="row g-4 mb-5">
-<div class="col-xl-3 col-md-6"><div class="analytics-card"><div><p>Revenue</p><h3>₹{{ total_revenue|floatformat:2 }}</h3></div></div></div>
-<div class="col-xl-3 col-md-6"><div class="analytics-card"><div><p>Orders</p><h3>{{ total_orders }}</h3></div></div></div>
-<div class="col-xl-3 col-md-6"><div class="analytics-card"><div><p>Pending</p><h3>{{ pending_orders }}</h3></div></div></div>
-<div class="col-xl-3 col-md-6"><div class="analytics-card"><div><p>Delivered</p><h3>{{ delivered_orders }}</h3></div></div></div>
-<div class="col-xl-3 col-md-6"><div class="analytics-card"><div><p>Customers</p><h3>{{ total_customers }}</h3></div></div></div>
-<div class="col-xl-3 col-md-6"><div class="analytics-card"><div><p>Farmers</p><h3>{{ total_farmers }}</h3></div></div></div>
-<div class="col-xl-3 col-md-6"><div class="analytics-card"><div><p>Products</p><h3>{{ total_products }}</h3></div></div></div>
-<div class="col-xl-3 col-md-6"><div class="analytics-card"><div><p>Low Stock</p><h3>{{ low_stock_products }}</h3></div></div></div>
-</div><div class="row g-4 mb-5"><div class="col-lg-8"><div class="analytics-panel"><h4>Monthly Revenue</h4><div class="chart-container"><canvas id="revenueChart"></canvas></div></div></div><div class="col-lg-4"><div class="analytics-panel"><h4>Order Status</h4><div class="chart-container"><canvas id="orderChart"></canvas></div></div></div></div><div class="row g-4"><div class="col-lg-6"><div class="analytics-panel"><h4>Top Customers</h4><div class="table-responsive"><table class="table"><thead><tr><th>Customer</th><th>Orders</th><th>Spent</th></tr></thead><tbody>{% for c in top_customers %}<tr><td>{{ c.customer__first_name|default:c.customer__username }} {{ c.customer__last_name }}</td><td>{{ c.order_count }}</td><td>₹{{ c.total_spent|floatformat:2 }}</td></tr>{% empty %}<tr><td colspan="3">No data.</td></tr>{% endfor %}</tbody></table></div></div></div><div class="col-lg-6"><div class="analytics-panel"><h4>Top Products</h4><div class="table-responsive"><table class="table"><thead><tr><th>Product</th><th>Qty</th><th>Revenue</th></tr></thead><tbody>{% for p in top_products %}<tr><td>{{ p.product_name }}</td><td>{{ p.total_quantity }}</td><td>₹{{ p.total_revenue|floatformat:2 }}</td></tr>{% empty %}<tr><td colspan="3">No data.</td></tr>{% endfor %}</tbody></table></div></div></div><div class="col-lg-6"><div class="analytics-panel"><h4>Low Stock</h4><div class="table-responsive"><table class="table"><thead><tr><th>Product</th><th>Farmer</th><th>Stock</th></tr></thead><tbody>{% for p in low_stock_list %}<tr><td>{{ p.name }}</td><td>{{ p.farmer.username }}</td><td><span class="badge {% if p.stock <= 3 %}bg-danger{% else %}bg-warning text-dark{% endif %}">{{ p.stock }}</span></td></tr>{% empty %}<tr><td colspan="3">No low stock products.</td></tr>{% endfor %}</tbody></table></div></div></div><div class="col-lg-6"><div class="analytics-panel"><h4>Recent Orders</h4><div class="table-responsive"><table class="table"><thead><tr><th>Order</th><th>Customer</th><th>Amount</th><th>Status</th></tr></thead><tbody>{% for o in recent_orders %}<tr><td>{{ o.order_number }}</td><td>{{ o.customer.username }}</td><td>₹{{ o.total_amount }}</td><td>{{ o.status|title }}</td></tr>{% empty %}<tr><td colspan="4">No orders.</td></tr>{% endfor %}</tbody></table></div></div></div></div></div>
-{% endblock %}{% block scripts %}<script src="https://cdn.jsdelivr.net/npm/chart.js"></script><script>new Chart(document.getElementById('revenueChart'),{type:'line',data:{labels:{{ monthly_labels|safe }},datasets:[{label:'Revenue',data:{{ monthly_revenue|safe }},tension:.3,fill:true}]},options:{responsive:true,maintainAspectRatio:false}});new Chart(document.getElementById('orderChart'),{type:'doughnut',data:{labels:{{ status_labels|safe }},datasets:[{data:{{ status_counts|safe }}}]},options:{responsive:true,maintainAspectRatio:false}});</script>{% endblock %}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Admin Dashboard | GreenHarvest{% endblock %}
+
+{% block content %}
+<style>
+.gh-hero{background:linear-gradient(115deg,#f5fbf6,#e2f5e8);padding:55px 0;overflow:hidden}
+.gh-hero h1{color:#173b29;font-size:clamp(2.4rem,4.5vw,4rem);font-weight:900;line-height:1.1;letter-spacing:-1.5px}
+.gh-hero h1 span{color:#13894e}
+.gh-hero p{color:#586c60;line-height:1.8}
+.gh-eyebrow{color:#13894e;font-weight:800}
+.gh-hero-image{width:100%;height:420px;object-fit:cover;border-radius:28px;box-shadow:0 18px 45px #173b2918}
+.gh-btn{display:inline-block;padding:12px 22px;background:#13894e;color:white;text-decoration:none;border-radius:30px;font-weight:700}
+.gh-btn:hover{background:#096d3b;color:white}
+.gh-btn-outline{display:inline-block;padding:11px 22px;border:1px solid #173b29;color:#173b29;text-decoration:none;border-radius:30px}
+.gh-section{background:#fbfdfb;padding:42px 0 55px}
+.gh-card{background:#fff;border:1px solid #e6eee8;border-radius:18px;padding:22px;height:100%;box-shadow:0 5px 22px #173b2908}
+.gh-icon{display:flex;align-items:center;justify-content:center;width:44px;height:44px;background:#e9f7ee;border-radius:13px;font-size:22px;margin-bottom:13px}
+.gh-card small{color:#738078}
+.gh-card strong.value{display:block;color:#173b29;font-size:1.45rem;margin-top:6px;overflow-wrap:anywhere}
+.gh-panel{background:white;border:1px solid #e6eee8;border-radius:18px;padding:22px;height:100%}
+.gh-panel h4{color:#173b29;font-weight:800;margin-bottom:18px}
+.gh-panel .table{margin-bottom:0;vertical-align:middle}
+.gh-panel th{color:#53665a;font-size:.85rem;white-space:nowrap}
+.gh-panel td{color:#33483a;font-size:.92rem}
+.gh-chart{position:relative;height:280px}
+.gh-muted{color:#758279;font-size:.92rem}
+@media(max-width:767px){.gh-hero{padding:35px 0}.gh-hero-image{height:270px;margin-top:10px}}
+</style>
+
+<section class="gh-hero">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <div class="gh-eyebrow mb-3">Fresh from the farm · Direct to home</div>
+        <h1>Better food starts with a <span>better connection.</span></h1>
+        <p class="mt-4">
+          Welcome, {{ user.first_name|default:user.username }}!
+          Manage farmers, customers, products and orders through your
+          GreenHarvest administration dashboard.
+        </p>
+        <div class="d-flex flex-wrap gap-3 mt-4">
+          <a href="/" class="gh-btn">🛒 View Marketplace</a>
+          <a href="/admin/" class="gh-btn-outline">Manage Website</a>
+        </div>
+        <div class="gh-muted mt-4">✓ Trusted farmers &nbsp; ✓ Fair pricing &nbsp; ✓ Farm-fresh delivery</div>
+      </div>
+      <div class="col-lg-6">
+        <img src="{% static 'images/farmer-hero.png' %}"
+             alt="GreenHarvest farmer with fresh produce"
+             class="gh-hero-image"
+             onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=85';">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="gh-section">
+  <div class="container">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+      <div>
+        <span class="gh-eyebrow">Administration</span>
+        <h2 class="fw-bold mt-2 mb-1" style="color:#173b29">Business Overview</h2>
+        <p class="gh-muted mb-0">Monitor your GreenHarvest marketplace.</p>
+      </div>
+      <a href="/admin/" class="gh-btn">Open Django Admin</a>
+    </div>
+
+    <div class="row g-4 mb-4">
+      <div class="col-6 col-xl-3"><div class="gh-card"><div class="gh-icon">💰</div><small>Total Revenue</small><strong class="value">₹{{ total_revenue|default:0|floatformat:2 }}</strong></div></div>
+      <div class="col-6 col-xl-3"><div class="gh-card"><div class="gh-icon">📦</div><small>Total Orders</small><strong class="value">{{ total_orders|default:0 }}</strong></div></div>
+      <div class="col-6 col-xl-3"><div class="gh-card"><div class="gh-icon">⏳</div><small>Pending Orders</small><strong class="value">{{ pending_orders|default:0 }}</strong></div></div>
+      <div class="col-6 col-xl-3"><div class="gh-card"><div class="gh-icon">✅</div><small>Delivered Orders</small><strong class="value">{{ delivered_orders|default:0 }}</strong></div></div>
+      <div class="col-6 col-xl-3"><div class="gh-card"><div class="gh-icon">🧑‍🤝‍🧑</div><small>Customers</small><strong class="value">{{ total_customers|default:0 }}</strong></div></div>
+      <div class="col-6 col-xl-3"><div class="gh-card"><div class="gh-icon">🌱</div><small>Farmers</small><strong class="value">{{ total_farmers|default:0 }}</strong></div></div>
+      <div class="col-6 col-xl-3"><div class="gh-card"><div class="gh-icon">🥬</div><small>Products</small><strong class="value">{{ total_products|default:0 }}</strong></div></div>
+      <div class="col-6 col-xl-3"><div class="gh-card"><div class="gh-icon">⚠️</div><small>Low Stock Products</small><strong class="value">{{ low_stock_products|default:0 }}</strong></div></div>
+    </div>
+
+    <div class="row g-4 mb-4">
+      <div class="col-lg-8">
+        <div class="gh-panel">
+          <h4>Monthly Revenue</h4>
+          <div class="gh-chart"><canvas id="revenueChart"></canvas></div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="gh-panel">
+          <h4>Order Status</h4>
+          <div class="gh-chart"><canvas id="orderChart"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+      <div class="col-lg-6">
+        <div class="gh-panel">
+          <h4>Top Customers</h4>
+          <div class="table-responsive">
+            <table class="table">
+              <thead><tr><th>Customer</th><th>Orders</th><th>Spent</th></tr></thead>
+              <tbody>
+                {% for c in top_customers %}
+                <tr>
+                  <td>{{ c.customer__first_name|default:c.customer__username }} {{ c.customer__last_name }}</td>
+                  <td>{{ c.order_count }}</td>
+                  <td>₹{{ c.total_spent|default:0|floatformat:2 }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="3">No customer data yet.</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="gh-panel">
+          <h4>Top Selling Products</h4>
+          <div class="table-responsive">
+            <table class="table">
+              <thead><tr><th>Product</th><th>Quantity</th><th>Revenue</th></tr></thead>
+              <tbody>
+                {% for p in top_products %}
+                <tr>
+                  <td>{{ p.product_name }}</td>
+                  <td>{{ p.total_quantity|default:0 }}</td>
+                  <td>₹{{ p.total_revenue|default:0|floatformat:2 }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="3">No sales data yet.</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-6">
+        <div class="gh-panel">
+          <h4>Low Stock Products</h4>
+          <div class="table-responsive">
+            <table class="table">
+              <thead><tr><th>Product</th><th>Farmer</th><th>Stock</th></tr></thead>
+              <tbody>
+                {% for p in low_stock_list %}
+                <tr>
+                  <td>{{ p.name }}</td>
+                  <td>{{ p.farmer.username }}</td>
+                  <td><span class="badge {% if p.stock <= 3 %}bg-danger{% else %}bg-warning text-dark{% endif %}">{{ p.stock }}</span></td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="3">No low stock products.</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="gh-panel">
+          <h4>Recent Orders</h4>
+          <div class="table-responsive">
+            <table class="table">
+              <thead><tr><th>Order</th><th>Customer</th><th>Amount</th><th>Status</th></tr></thead>
+              <tbody>
+                {% for o in recent_orders %}
+                <tr>
+                  <td>{{ o.order_number|default:o.id }}</td>
+                  <td>{{ o.customer.username }}</td>
+                  <td>₹{{ o.total_amount|default:0|floatformat:2 }}</td>
+                  <td><span class="badge bg-success">{{ o.status|default:"Pending"|title }}</span></td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4">No orders yet.</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  if (typeof Chart === 'undefined') return;
+
+  const revenueCanvas = document.getElementById('revenueChart');
+  const orderCanvas = document.getElementById('orderChart');
+
+  if (revenueCanvas) {
+    new Chart(revenueCanvas, {
+      type: 'line',
+      data: {
+        labels: {{ monthly_labels|default:"[]"|safe }},
+        datasets: [{
+          label: 'Revenue (₹)',
+          data: {{ monthly_revenue|default:"[]"|safe }},
+          borderColor: '#13894e',
+          backgroundColor: 'rgba(19,137,78,0.12)',
+          pointBackgroundColor: '#13894e',
+          fill: true,
+          tension: 0.35
+        }]
+      },
+      options: { responsive: true, maintainAspectRatio: false }
+    });
+  }
+
+  if (orderCanvas) {
+    new Chart(orderCanvas, {
+      type: 'doughnut',
+      data: {
+        labels: {{ status_labels|default:"[]"|safe }},
+        datasets: [{
+          data: {{ status_counts|default:"[]"|safe }},
+          backgroundColor: ['#13894e','#e6b84a','#4c9bd6','#e56b6f','#9b8bd4']
+        }]
+      },
+      options: { responsive: true, maintainAspectRatio: false }
+    });
+  }
+});
+</script>
+{% endblock %}
