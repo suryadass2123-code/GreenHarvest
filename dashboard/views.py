@@ -1,10 +1,10 @@
 
-from datetime import date, timedelta
+from datetime import date
 from decimal import Decimal
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, F, Sum
-from django.db.models.functions import TruncMonth, TruncDate
+from django.db.models.functions import TruncMonth
 from django.shortcuts import render
 from django.utils import timezone
 
@@ -55,51 +55,6 @@ def farmer_dashboard(request):
         or Decimal('0.00')
     )
 
-    today = timezone.localdate()
-    start_day = today - timedelta(days=6)
-
-    daily_rows = (
-        OrderItem.objects
-        .filter(
-            product__farmer=request.user,
-            order__status='DELIVERED',
-            order__created_at__date__gte=start_day,
-            order__created_at__date__lte=today,
-        )
-        .annotate(day=TruncDate('order__created_at'))
-        .values('day')
-        .annotate(total=Sum(F('price') * F('quantity')))
-        .order_by('day')
-    )
-
-    daily_lookup = {
-        row['day']: float(row['total'] or 0)
-        for row in daily_rows
-        if row['day']
-    }
-
-    sales_labels = []
-    sales_values = []
-
-    for offset in range(7):
-        current_day = start_day + timedelta(days=offset)
-        sales_labels.append(current_day.strftime('%a'))
-        sales_values.append(daily_lookup.get(current_day, 0))
-
-    top_products = (
-        OrderItem.objects
-        .filter(
-            product__farmer=request.user,
-            order__status='DELIVERED',
-        )
-        .values('product_name')
-        .annotate(
-            total_quantity=Sum('quantity'),
-            revenue=Sum(F('price') * F('quantity')),
-        )
-        .order_by('-total_quantity')[:5]
-    )
-
     context = {
         'product_count': products.count(),
         'active_product_count': products.filter(
@@ -111,10 +66,7 @@ def farmer_dashboard(request):
         'delivered_count': delivered_count,
         'revenue': revenue,
         'products': products[:4],
-        'top_products': top_products,
         'recent_orders': farmer_orders[:6],
-        'sales_labels': sales_labels,
-        'sales_values': sales_values,
     }
 
     return render(

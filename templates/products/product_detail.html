@@ -1,3 +1,112 @@
-{% extends 'base.html' %}{% block title %}{{ product.name }} | GreenHarvest{% endblock %}{% block content %}
-<div class="container py-5"><div class="row g-5"><div class="col-lg-6">{% if product.image %}<img src="{{ product.image.url }}" class="detail-image" alt="{{ product.name }}">{% else %}<div class="detail-image placeholder-image"><i class="bi bi-image display-1"></i></div>{% endif %}</div><div class="col-lg-6"><span class="badge bg-success-subtle text-success">{{ product.category.name }}</span><h1 class="mt-2">{{ product.name }}</h1><div class="text-warning fs-5">{% for i in '12345' %}{% if forloop.counter <= average_rating %}★{% else %}☆{% endif %}{% endfor %} <span class="text-dark fs-6">{{ average_rating }}/5 ({{ review_count }})</span></div><p class="lead">₹{{ product.price }}/{{ product.unit }}</p><p>{{ product.description }}</p><p class="text-muted">Farmer: {{ product.farmer.get_full_name|default:product.farmer.username }} • {{ product.location|default:'Local farm' }}</p><p><strong>Stock:</strong> {{ product.stock }}</p><form method="post" action="{% url 'add_to_cart' product.id %}" class="d-flex gap-2 mb-3">{% csrf_token %}<input class="form-control" style="max-width:120px" type="number" name="quantity" min="1" max="{{ product.stock }}" value="1"><button class="btn btn-success flex-fill">Add to Cart</button></form><a href="{% url 'add_to_wishlist' product.id %}" class="btn btn-outline-danger w-100">♡ Add to Wishlist</a></div></div><hr class="my-5"><div class="d-flex justify-content-between align-items-center mb-4"><div><h2>Customer Reviews</h2><p class="text-muted">Real customer feedback.</p></div>{% if user.is_authenticated %}<a class="btn btn-success" href="{% url 'add_review' product.id %}">Write a Review</a>{% endif %}</div><div class="row g-4">{% for r in reviews %}<div class="col-md-6"><div class="review-card"><div class="d-flex justify-content-between"><div><strong>{{ r.title }}</strong><div class="small text-muted">{{ r.customer.username }}</div></div><span class="text-warning">{{ r.rating }}/5</span></div><p class="mt-3 mb-1">{{ r.comment }}</p><small class="text-muted">{{ r.created_at|date:'d M Y' }}</small>{% if r.customer == user %}<div class="mt-3"><a href="{% url 'edit_review' r.id %}" class="btn btn-sm btn-outline-success">Edit</a><form method="post" action="{% url 'delete_review' r.id %}" class="d-inline">{% csrf_token %}<button class="btn btn-sm btn-outline-danger">Delete</button></form></div>{% endif %}</div></div>{% empty %}<div class="col-12"><div class="alert alert-light border">No reviews yet.</div></div>{% endfor %}</div></div>
+{% extends 'base.html' %}{% load static %}{% block title %}{{ product.name }} | GreenHarvest{% endblock %}{% block content %}
+<div class="container py-5">
+    <div class="row g-5">
+        <div class="col-lg-6">
+            {% if not product.image or "white onion" in product.name|lower or "white_onion" in product.name|lower or "white-onion" in product.name|lower %}
+                    {% static 'images/products/white onion.jpg' as fallback_image %}
+            {% elif "onion" in product.name|lower %}
+                    {% static 'images/products/onion.jpg' as fallback_image %}
+            {% elif "tomato" in product.name|lower %}
+                    {% static 'images/products/tomato.jpg' as fallback_image %}
+            {% elif "potato" in product.name|lower %}
+                    {% static 'images/products/potato.jpg' as fallback_image %}
+            {% elif "brinjal" in product.name|lower or "eggplant" in product.name|lower %}
+                    {% static 'images/products/brinjal.png' as fallback_image %}
+            {% elif "drumstick" in product.name|lower %}
+                    {% static 'images/products/drumstick.jpg' as fallback_image %}
+            {% elif "ladies finger" in product.name|lower or "ladies-finger" in product.name|lower or "okra" in product.name|lower %}
+                    {% static 'images/products/ladies-finger.jpg' as fallback_image %}
+            {% elif "carrot" in product.name|lower %}
+                    {% static 'images/products/carrot.jpg' as fallback_image %}
+            {% elif "cabbage" in product.name|lower %}
+                    {% static 'images/products/cabbage.jpg' as fallback_image %}
+            {% elif "cauliflower" in product.name|lower %}
+                    {% static 'images/products/cauliflower.jpg' as fallback_image %}
+            {% elif "chilli" in product.name|lower or "chili" in product.name|lower %}
+                    {% static 'images/products/green-chilli.jpg' as fallback_image %}
+            {% elif "banana" in product.name|lower %}
+                    {% static 'images/products/banana.jpg' as fallback_image %}
+            {% elif "mango" in product.name|lower %}
+                    {% static 'images/products/mango.jpg' as fallback_image %}
+            {% elif "cucumber" in product.name|lower %}
+                    {% static 'images/products/cucumber.jpg' as fallback_image %}
+            {% elif "pumpkin" in product.name|lower %}
+                    {% static 'images/products/pumpkin.jpg' as fallback_image %}
+            {% elif "spinach" in product.name|lower %}
+                    {% static 'images/products/Spinach.jpg' as fallback_image %}
+            {% elif "coriander" in product.name|lower %}
+                    {% static 'images/products/Coriander Leaves.jpg' as fallback_image %}
+            {% elif "mint" in product.name|lower %}
+                    {% static 'images/products/Mint Leaves.jpg' as fallback_image %}
+            {% elif "papaya" in product.name|lower %}
+                    {% static 'images/products/Papaya.jpg' as fallback_image %}
+            {% elif "guava" in product.name|lower %}
+                    {% static 'images/products/Guava.jpg' as fallback_image %}
+            {% elif "watermelon" in product.name|lower %}
+                    {% static 'images/products/Watermelon.jpg' as fallback_image %}
+            {% elif "pomegranate" in product.name|lower %}
+                    {% static 'images/products/Pomegranate.jpg' as fallback_image %}
+            {% elif "sweet lime" in product.name|lower or "mosambi" in product.name|lower %}
+                    {% static 'images/products/Sweet Lime.jpg' as fallback_image %}
+            {% elif "jackfruit" in product.name|lower %}
+                    {% static 'images/products/Jackfruit.jpg' as fallback_image %}
+            {% elif "coconut" in product.name|lower %}
+                    {% static 'images/products/Coconut.jpg' as fallback_image %}
+            {% endif %}
+            {% if product.image or fallback_image %}
+                <img src="{% if product.image and product.image.name != 'products/white_onion.jpg' %}{{ product.image.url }}{% else %}{{ fallback_image }}{% endif %}"
+                    class="detail-image" alt="{{ product.name }}"
+                    data-fallback="{{ fallback_image|default:'' }}"
+                    onerror="if(this.dataset.fallback && this.src !== this.dataset.fallback){this.src=this.dataset.fallback;}else{this.onerror=null;this.style.display='none';this.nextElementSibling.style.display='flex';}">
+                <div class="detail-image placeholder-image align-items-center justify-content-center"
+                    style="display:none;"><i class="bi bi-image display-1"></i></div>
+            {% else %}
+                <div class="detail-image placeholder-image d-flex align-items-center justify-content-center">
+                    <i class="bi bi-image display-1"></i>
+                </div>
+            {% endif %}
+        </div>
+        <div class="col-lg-6"><span class="badge bg-success-subtle text-success">{{ product.category.name }}</span>
+            <h1 class="mt-2">{{ product.name }}</h1>
+            <div class="text-warning fs-5">{% for i in '12345' %}{% if forloop.counter <= average_rating %}★{% else
+                    %}☆{% endif %}{% endfor %} <span class="text-dark fs-6">{{ average_rating }}/5 ({{ review_count
+                    }})</span></div>
+            <p class="lead">₹{{ product.price }}/{{ product.unit }}</p>
+            <p>{{ product.description }}</p>
+            <p class="text-muted">Farmer: {{ product.farmer.get_full_name|default:product.farmer.username }} • {{
+                product.location|default:'Local farm' }}</p>
+            <p><strong>Stock:</strong> {{ product.stock }}</p>
+            <form method="post" action="{% url 'add_to_cart' product.id %}" class="d-flex gap-2 mb-3">{% csrf_token
+                %}<input class="form-control" style="max-width:120px" type="number" name="quantity" min="1"
+                    max="{{ product.stock }}" value="1"><button class="btn btn-success flex-fill">Add to Cart</button>
+            </form><a href="{% url 'add_to_wishlist' product.id %}" class="btn btn-outline-danger w-100">♡ Add to
+                Wishlist</a>
+        </div>
+    </div>
+    <hr class="my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2>Customer Reviews</h2>
+            <p class="text-muted">Real customer feedback.</p>
+        </div>{% if user.is_authenticated %}<a class="btn btn-success" href="{% url 'add_review' product.id %}">Write a
+            Review</a>{% endif %}
+    </div>
+    <div class="row g-4">{% for r in reviews %}<div class="col-md-6">
+            <div class="review-card">
+                <div class="d-flex justify-content-between">
+                    <div><strong>{{ r.title }}</strong>
+                        <div class="small text-muted">{{ r.customer.username }}</div>
+                    </div><span class="text-warning">{{ r.rating }}/5</span>
+                </div>
+                <p class="mt-3 mb-1">{{ r.comment }}</p><small class="text-muted">{{ r.created_at|date:'d M Y'
+                    }}</small>{% if r.customer == user %}<div class="mt-3"><a href="{% url 'edit_review' r.id %}"
+                        class="btn btn-sm btn-outline-success">Edit</a>
+                    <form method="post" action="{% url 'delete_review' r.id %}" class="d-inline">{% csrf_token %}<button
+                            class="btn btn-sm btn-outline-danger">Delete</button></form>
+                </div>{% endif %}
+            </div>
+        </div>{% empty %}<div class="col-12">
+            <div class="alert alert-light border">No reviews yet.</div>
+        </div>{% endfor %}</div>
+</div>
 {% endblock %}

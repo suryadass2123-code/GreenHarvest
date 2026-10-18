@@ -29,6 +29,12 @@
 .farmer-panel th{font-size:.85rem;color:#53665a;white-space:nowrap}
 .farmer-panel td{font-size:.92rem;color:#33483a}
 .farmer-chart{position:relative;height:260px}
+.farmer-analytics{scroll-margin-top:100px}
+.farmer-analytics-note{font-size:.85rem;color:#758279}
+.farmer-analytics-stat{border:1px solid #e6eee8;border-radius:16px;padding:18px;background:#fff;height:100%}
+.farmer-analytics-stat small{color:#758279}
+.farmer-analytics-stat strong{display:block;color:#173b29;font-size:1.45rem;margin-top:5px}
+.farmer-analytics-stat span{font-size:.82rem;color:#13894e}
 .farmer-link{display:flex;justify-content:space-between;gap:12px;padding:14px 0;text-decoration:none;color:#33483a;border-bottom:1px solid #edf1ed}
 .farmer-link:last-child{border-bottom:0}
 .farmer-link:hover{color:#13894e}
@@ -47,7 +53,7 @@
           and manage your products and orders with GreenHarvest.
         </p>
         <div class="d-flex flex-wrap gap-3 mt-4">
-          <a href="/products/create/" class="farmer-btn">＋ Add New Product</a>
+          <a href="{% url 'product_create' %}" class="farmer-btn">＋ Add New Product</a>
           <a href="#my-products" class="farmer-outline">View My Products</a>
         </div>
         <div class="farmer-muted mt-4">✓ Direct market access &nbsp; ✓ Fair pricing &nbsp; ✓ Grow your business</div>
@@ -84,7 +90,7 @@
               <h4 class="mb-1">Your Products</h4>
               <p class="farmer-muted mb-0">Manage your latest product listings.</p>
             </div>
-            <a href="/products/create/" class="farmer-btn">＋ Add Product</a>
+            <a href="{% url 'product_create' %}" class="farmer-btn">＋ Add Product</a>
           </div>
 
           <div class="row g-3">
@@ -117,7 +123,7 @@
               <div style="font-size:40px">🌱</div>
               <h5>No products added yet</h5>
               <p class="farmer-muted">Add your first product to start selling.</p>
-              <a href="/products/create/" class="farmer-btn">Add Your First Product</a>
+              <a href="{% url 'product_create' %}" class="farmer-btn">Add Your First Product</a>
             </div>
             {% endfor %}
           </div>
@@ -127,26 +133,59 @@
       <div class="col-lg-4" id="quick-links">
         <div class="farmer-panel">
           <h4>Quick Links</h4>
-          <a href="/products/create/" class="farmer-link"><span>＋ Add New Product</span><span>›</span></a>
-          <a href="/products/" class="farmer-link"><span>🥬 Browse Products</span><span>›</span></a>
-          <a href="/farmer/" class="farmer-link"><span>📊 Farm Dashboard</span><span>›</span></a>
-          <a href="/" class="farmer-link"><span>🏠 Visit Marketplace</span><span>›</span></a>
+          <a href="{% url 'product_create' %}" class="farmer-link"><span>＋ Add New Product</span><span>›</span></a>
+          <a href="{% url 'product_list' %}" class="farmer-link"><span>🥬 Browse Products</span><span>›</span></a>
+          <a href="{% url 'farmer_dashboard' %}" class="farmer-link"><span>📊 Farm Dashboard</span><span>›</span></a>
+          <a href="{% url 'home' %}" class="farmer-link"><span>🏠 Visit Marketplace</span><span>›</span></a>
           <hr>
           <p class="farmer-muted mb-0">Together we grow a healthier planet through sustainable farming.</p>
         </div>
       </div>
     </div>
 
-    <div class="row g-4">
-      <div class="col-lg-6">
-        <div class="farmer-panel">
-          <h4>Sales Overview</h4>
-          <p class="farmer-muted">Review your sales performance.</p>
-          <div class="farmer-chart"><canvas id="farmerSalesChart"></canvas></div>
+    <section class="farmer-analytics mt-4" id="analytics">
+      <div class="d-flex justify-content-between align-items-end flex-wrap gap-2 mb-3">
+        <div>
+          <div class="farmer-eyebrow">Farm performance</div>
+          <h2 class="fw-bold mb-1" style="color:#173b29">Analytics Overview</h2>
+          <p class="farmer-muted mb-0">A snapshot of sales and product performance.</p>
+        </div>
+        <span class="farmer-analytics-note">Static sample data</span>
+      </div>
+
+      <div class="row g-3 mb-4">
+        <div class="col-6 col-xl-3"><div class="farmer-analytics-stat"><small>Sales this month</small><strong>₹48,650</strong><span>↑ 12.8% vs last month</span></div></div>
+        <div class="col-6 col-xl-3"><div class="farmer-analytics-stat"><small>Items sold</small><strong>326</strong><span>Across 8 products</span></div></div>
+        <div class="col-6 col-xl-3"><div class="farmer-analytics-stat"><small>Average order value</small><strong>₹742</strong><span>↑ 5.2% vs last month</span></div></div>
+        <div class="col-6 col-xl-3"><div class="farmer-analytics-stat"><small>Repeat customers</small><strong>64%</strong><span>Returning buyers</span></div></div>
+      </div>
+
+      <div class="row g-4 mb-4">
+        <div class="col-lg-8">
+          <div class="farmer-panel">
+            <h4>Sales Trend</h4>
+            <p class="farmer-muted">Sample sales over the last six months.</p>
+            <div class="farmer-chart"><canvas id="farmerSalesChart" aria-label="Static sample sales trend chart" role="img"></canvas></div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="farmer-panel">
+            <h4>Sales by Category</h4>
+            <p class="farmer-muted">Sample share of total sales.</p>
+            <div class="farmer-chart"><canvas id="farmerCategoryChart" aria-label="Static sample sales by category chart" role="img"></canvas></div>
+          </div>
         </div>
       </div>
 
-      <div class="col-lg-6" id="recent-orders">
+      <div class="row g-4">
+        <div class="col-lg-6">
+          <div class="farmer-panel">
+            <h4>Top Products</h4>
+            <p class="farmer-muted">Sample units sold this month.</p>
+            <div class="farmer-chart"><canvas id="farmerProductsChart" aria-label="Static sample top products chart" role="img"></canvas></div>
+          </div>
+        </div>
+        <div class="col-lg-6" id="recent-orders">
         <div class="farmer-panel">
           <h4>Recent Customer Orders</h4>
           <div class="table-responsive">
@@ -168,7 +207,8 @@
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </section>
   </div>
 </section>
 {% endblock %}
@@ -177,30 +217,63 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-  const canvas = document.getElementById('farmerSalesChart');
-  if (!canvas || typeof Chart === 'undefined') return;
+  if (typeof Chart === 'undefined') return;
 
-  new Chart(canvas, {
-    type: 'line',
-    data: {
-      labels: {{ sales_labels|default:"[]"|safe }},
+  const charts = [
+    {
+      id: 'farmerSalesChart',
+      type: 'line',
+      labels: ['May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
       datasets: [{
         label: 'Sales (₹)',
-        data: {{ sales_values|default:"[]"|safe }},
+        data: [28400, 32100, 29800, 37600, 43100, 48650],
         borderColor: '#13894e',
         backgroundColor: 'rgba(19,137,78,0.12)',
         pointBackgroundColor: '#13894e',
         borderWidth: 3,
         fill: true,
         tension: 0.35
-      }]
+      }],
+      options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
     },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: { y: { beginAtZero: true } }
+    {
+      id: 'farmerCategoryChart',
+      type: 'doughnut',
+      labels: ['Vegetables', 'Fruits', 'Grains', 'Herbs'],
+      datasets: [{
+        data: [48, 27, 16, 9],
+        backgroundColor: ['#13894e', '#f4a62a', '#4b82cf', '#8ebf72'],
+        borderWidth: 0
+      }],
+      options: { plugins: { legend: { position: 'bottom' } } }
+    },
+    {
+      id: 'farmerProductsChart',
+      type: 'bar',
+      labels: ['Tomatoes', 'Spinach', 'Carrots', 'Apples', 'Potatoes'],
+      datasets: [{
+        label: 'Units sold',
+        data: [96, 78, 62, 51, 39],
+        backgroundColor: '#13894e',
+        borderRadius: 6
+      }],
+      options: { indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true } } }
     }
+  ];
+
+  charts.forEach(({ id, type, labels, datasets, options }) => {
+    const canvas = document.getElementById(id);
+    if (!canvas) return;
+
+    new Chart(canvas, {
+      type,
+      data: { labels, datasets },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        ...options
+      }
+    });
   });
 });
 </script>

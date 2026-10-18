@@ -48,6 +48,7 @@ img {
     min-height: 76px;
     display: flex;
     align-items: center;
+    gap: 24px;
 }
 
 .gh-brand {
@@ -97,6 +98,9 @@ img {
 }
 
 .gh-nav-links .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     color: #24362c;
     padding: 24px 12px;
     font-size: 14px;
@@ -104,20 +108,31 @@ img {
     position: relative;
 }
 
+.gh-nav-links {
+    align-items: center;
+    gap: 6px;
+    margin-right: 20px;
+}
+
 .gh-nav-links .nav-link:hover,
-.gh-nav-links .nav-link:focus {
+.gh-nav-links .nav-link:focus,
+.gh-nav-links .nav-link.active {
     color: var(--gh-green);
 }
 
 .gh-nav-links .nav-link i {
-    margin-right: 4px;
-    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    font-size: 16px;
+    line-height: 1;
 }
 
 .gh-nav-actions {
     display: flex;
     align-items: center;
-    gap: 9px;
+    gap: 12px;
 }
 
 .gh-icon-btn {
@@ -130,6 +145,11 @@ img {
     color: var(--gh-ink);
     border: 1px solid var(--gh-line);
     background: #fff;
+}
+
+.gh-icon-btn i {
+    font-size: 16px;
+    line-height: 1;
 }
 
 .gh-icon-btn:hover {
@@ -177,9 +197,22 @@ img {
 }
 
 .gh-toggler {
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     border: 0;
+    padding: 0;
     font-size: 24px;
     color: var(--gh-ink);
+    margin-left: auto;
+}
+
+.gh-toggler .bi {
+    display: block;
+    font-size: 28px;
+    line-height: 1;
 }
 
 .gh-message-wrap {
@@ -1364,6 +1397,18 @@ img {
 @media (max-width: 991px) {
     .gh-nav-inner {
         padding: 10px 14px;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .gh-nav-inner > .navbar-collapse {
+        flex-basis: 100%;
+    }
+
+    .gh-nav-links {
+        align-items: stretch;
+        gap: 0;
+        margin: 0 !important;
     }
 
     .gh-nav-links .nav-link {
@@ -1371,7 +1416,7 @@ img {
     }
 
     .gh-nav-actions {
-        margin-top: 12px;
+        margin-top: 8px;
         padding-bottom: 10px;
         flex-wrap: wrap;
     }

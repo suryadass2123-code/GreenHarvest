@@ -26,22 +26,22 @@ urlpatterns = [
     ),
 
     # Farmer product management
-    path('farmer/', farmer_products, name='farmer_products'),
+    path('farmer/products/', farmer_products, name='farmer_products'),
 
     path(
-        'farmer/add/',
+        'farmer/products/add/',
         product_create,
         name='product_create',
     ),
 
     path(
-        'farmer/<int:product_id>/edit/',
+        'farmer/products/<int:product_id>/edit/',
         product_edit,
         name='product_edit',
     ),
 
     path(
-        'farmer/<int:product_id>/delete/',
+        'farmer/products/<int:product_id>/delete/',
         product_delete,
         name='product_delete',
     ),

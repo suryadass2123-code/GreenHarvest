@@ -53,22 +53,17 @@ def user_login(request):
         if user is not None:
             login(request, user)
 
-            # Admin redirect
             if user.is_superuser or user.is_staff:
-                return redirect('admin_dashboard')
+                return redirect('home')
 
-            # Farmer / Customer redirect
             try:
                 profile = Profile.objects.get(user=user)
                 role = (profile.role or '').strip().lower()
             except Profile.DoesNotExist:
                 role = ''
 
-            if role == 'farmer':
-                return redirect('farmer_dashboard')
-
-            if role == 'customer':
-                return redirect('customer_dashboard')
+            if role in {'farmer', 'customer'}:
+                return redirect('home')
 
             messages.warning(
                 request,

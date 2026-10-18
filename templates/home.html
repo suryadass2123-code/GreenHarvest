@@ -202,7 +202,7 @@
                                 {% if p.image %}
                                     <div class="showcase-image">
                                         <img
-                                            src="{{ p.image.url }}"
+                                            src="{% if p.image.name == 'products/white_onion.jpg' %}{% static fallback %}{% else %}{{ p.image.url }}{% endif %}"
                                             data-fallback="{% static fallback %}"
                                             alt="{{ p.name }}"
                                             class="img-fluid"
