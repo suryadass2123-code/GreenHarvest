@@ -388,17 +388,14 @@
 
                             <!-- PRODUCT RATING -->
                             <div class="rating-row text-warning">
-                                {% for i in '12345' %}
-                                    {% if forloop.counter <= p.avg_rating|default:0 %}
-                                        ★
-                                    {% else %}
-                                        ☆
-                                    {% endif %}
-                                {% endfor %}
-
-                                <span>
-                                    {{ p.avg_rating|default:0|floatformat:1 }}
-                                </span>
+                                {% if p.avg_rating %}
+                                    {% for i in '12345' %}
+                                        {% if forloop.counter <= p.avg_rating %}★{% else %}☆{% endif %}
+                                    {% endfor %}
+                                    <span>{{ p.avg_rating|floatformat:1 }}</span>
+                                {% else %}
+                                    <span class="text-muted">No ratings yet</span>
+                                {% endif %}
                             </div>
 
                             <!-- DESCRIPTION -->

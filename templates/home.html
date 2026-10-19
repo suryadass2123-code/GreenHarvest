@@ -389,9 +389,13 @@
                                 Available
                             </span>
 
-                            <span class="text-warning">
-                                ★ {{ p.avg_rating|floatformat:1 }}
-                            </span>
+                            {% if p.avg_rating %}
+                                <span class="text-warning">
+                                    ★ {{ p.avg_rating|floatformat:1 }}
+                                </span>
+                            {% else %}
+                                <span class="text-muted">No ratings yet</span>
+                            {% endif %}
 
                         </div>
 
